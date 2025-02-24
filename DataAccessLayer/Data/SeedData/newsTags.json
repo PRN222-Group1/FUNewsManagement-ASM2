@@ -1,0 +1,74 @@
+[
+  {
+    "NewsArticleId": 1,
+    "TagId": 5
+  },
+  {
+    "NewsArticleId": 1,
+    "TagId": 7
+  },
+  {
+    "NewsArticleId": 1,
+    "TagId": 9
+  },
+  {
+    "NewsArticleId": 2,
+    "TagId": 5
+  },
+  {
+    "NewsArticleId": 2,
+    "TagId": 7
+  },
+  {
+    "NewsArticleId": 2,
+    "TagId": 8
+  },
+  {
+    "NewsArticleId": 2,
+    "TagId": 9
+  },
+  {
+    "NewsArticleId": 3,
+    "TagId": 1
+  },
+  {
+    "NewsArticleId": 3,
+    "TagId": 8
+  },
+  {
+    "NewsArticleId": 3,
+    "TagId": 9
+  },
+  {
+    "NewsArticleId": 4,
+    "TagId": 1
+  },
+  {
+    "NewsArticleId": 4,
+    "TagId": 4
+  },
+  {
+    "NewsArticleId": 4,
+    "TagId": 8
+  },
+  {
+    "NewsArticleId": 4,
+    "TagId": 9
+  },
+  {
+    "NewsArticleId": 5,
+    "TagId": 2
+  },
+  {
+    "NewsArticleId": 5,
+    "TagId": 3
+  },
+  {
+    "NewsArticleId": 5,
+    "TagId": 4
+  },
+  {
+    "NewsArticleId": 5,
+    "TagId": 6
+  }
+]

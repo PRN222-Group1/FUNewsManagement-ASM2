@@ -1,0 +1,42 @@
+[
+  {
+    "AccountName": "Emma William",
+    "AccountEmail": "EmmaWilliam@FUNewsManagement.org",
+    "Gender": "Female",
+    "ImageUrl": "https://t4.ftcdn.net/jpg/02/79/66/93/360_F_279669366_Lk12QalYQKMczLEa4ySjhaLtx1M2u7e6.jpg",
+    "AccountRole": 2,
+    "AccountPassword": "@1"
+  },
+  {
+    "AccountName": "Olivia James",
+    "AccountEmail": "OliviaJames@FUNewsManagement.org",
+    "Gender": "Female",
+    "ImageUrl": "https://t4.ftcdn.net/jpg/02/79/66/93/360_F_279669366_Lk12QalYQKMczLEa4ySjhaLtx1M2u7e6.jpg",
+    "AccountRole": 2,
+    "AccountPassword": "@1"
+  },
+  {
+    "AccountName": "Isabella David",
+    "AccountEmail": "IsabellaDavid@FUNewsManagement.org",
+    "Gender": "Female",
+    "ImageUrl": "https://t4.ftcdn.net/jpg/02/79/66/93/360_F_279669366_Lk12QalYQKMczLEa4ySjhaLtx1M2u7e6.jpg",
+    "AccountRole": 1,
+    "AccountPassword": "@1"
+  },
+  {
+    "AccountName": "Michael Charlotte",
+    "AccountEmail": "MichaelCharlotte@FUNewsManagement.org",
+    "Gender": "Male",
+    "ImageUrl": "https://img.freepik.com/premium-vector/professional-male-avatar-profile-picture-employee-work_1322206-66590.jpg",
+    "AccountRole": 1,
+    "AccountPassword": "@1"
+  },
+  {
+    "AccountName": "Steve Paris",
+    "AccountEmail": "SteveParis@FUNewsManagement.org",
+    "Gender": "Male",
+    "ImageUrl": "https://img.freepik.com/premium-vector/professional-male-avatar-profile-picture-employee-work_1322206-66590.jpg",
+    "AccountRole": 1,
+    "AccountPassword": "@1"
+  }
+]
