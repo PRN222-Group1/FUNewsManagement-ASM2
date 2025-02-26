@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@using BusinessServiceLayer.DTOs
+@model Group1RazorPages.Pages.Categories.IndexModel
+
+@{
+    var selectedCategory = (int?)ViewData["SelectedCategoryId"];
+}
+
+<div class="form-group d-flex align-items-center">
+    <label for="CategoryId" class="form-label">Category: </label>
+    <select asp-items="@(new SelectList((IReadOnlyList<CategoryDTO>) ViewData["Categories"],
+                                    "Id",
+                                    "CategoryName",
+                                    selectedCategory))"
+            asp-for="@Model.Category.CategoryId"
+            class="form-control">
+    </select>
+</div>

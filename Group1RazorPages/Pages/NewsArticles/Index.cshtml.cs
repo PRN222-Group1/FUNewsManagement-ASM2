@@ -45,27 +45,6 @@ namespace Group1RazorPages.Pages.NewsArticles
         {
             await InitializeNewsArticlesAndFiltersAsync();
 
-            // Load existing article if ArticleId is provided (for edit modal)
-            if (ArticleId.HasValue)
-            {
-                var existingArticle = await _newsArticleService.GetNewsArticleByIdAsync(ArticleId.Value);
-                if (existingArticle == null) return NotFound();
-
-                NewsArticle = new NewsArticleToAddOrUpdateDTO
-                {
-                    Headline = existingArticle.Headline,
-                    NewsTitle = existingArticle.NewsTitle,
-                    NewsContent = existingArticle.NewsContent,
-                    CategoryId = existingArticle.CategoryId,
-                    NewsSource = existingArticle.NewsSource,
-                    NewsStatus = existingArticle.NewsStatus,
-                    TagIds = string.Join(",", existingArticle.Tags.Select(tag => tag.Id.ToString()))
-                };
-
-                ShowModal = true;
-                ViewData["Action"] = "Edit";
-            }
-
             return Page();
         }
 
@@ -187,6 +166,7 @@ namespace Group1RazorPages.Pages.NewsArticles
             return Page();
         }
 
+        // Delete News Article
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             var result = await _newsArticleService.DeleteNewsArticleAsync(id);

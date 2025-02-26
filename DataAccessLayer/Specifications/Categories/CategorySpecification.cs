@@ -6,7 +6,7 @@ namespace DataAccessLayer.Specifications.Categories
     {
         public CategorySpecification(CategorySpecParams specParams) : base(x => 
             (string.IsNullOrEmpty(specParams.Search) || x.CategoryName.Contains(specParams.Search))
-            && (!specParams.CategoryId.HasValue || x.ParentCategoryId == specParams.CategoryId)
+            && (!specParams.CatId.HasValue || x.ParentCategoryId == specParams.CatId)
             && (!specParams.Status.HasValue || x.IsActive == specParams.Status)
         )
         {

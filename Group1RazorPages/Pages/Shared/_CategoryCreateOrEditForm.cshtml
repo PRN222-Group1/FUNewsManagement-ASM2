@@ -1,59 +1,66 @@
-﻿@model BusinessServiceLayer.DTOs.CategoryToAddOrUpdateDTO
+﻿@using BusinessServiceLayer.DTOs
+@model Group1RazorPages.Pages.Categories.IndexModel
 
 @{
     var action = ViewData["Action"];
-
-    ViewData["Title"] = action + " Category";
-
-    var categories = ViewBag.Categories;
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <!-- Card for the form -->
-            <div class="card shadow-lg rounded">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">@action Category</h4>
-                </div>
-                <div class="card-body">
-                    <form asp-action="@action" method="post" onsubmit="return confirm('Are you sure you want to @action this category?')">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<!-- Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="categoryModalLabel">@action Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
 
-                        <!-- Category Name -->
-                        <div class="form-group mb-3">
-                            <label asp-for="CategoryName" class="control-label">Category Name</label>
-                            <input asp-for="CategoryName" class="form-control" placeholder="Enter Category Name" />
-                            <span asp-validation-for="CategoryName" class="text-danger"></span>
+            <div class="modal-body">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                }
+                <form id="categoryForm" method="post" asp-page-handler="@action" onsubmit="confirm('Are you sure you want to @action this category?')">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Category Name -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Category.CategoryName" class="control-label">Category Name</label>
+                        <input asp-for="Category.CategoryName" class="form-control" placeholder="Enter Category Name" />
+                        <span asp-validation-for="Category.CategoryName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Category Description -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Category.CategoryDescription" class="control-label">Category Description</label>
+                        <input asp-for="Category.CategoryDescription" class="form-control" placeholder="Enter Category Description" />
+                        <span asp-validation-for="Category.CategoryDescription" class="text-danger"></span>
+                    </div>
+
+                    @if (action == "Edit")
+                    {
+                        <!-- News Status (checkbox) -->
+                        <div class="form-group mb-3 form-check">
+                            <input asp-for="Category.Status" class="form-check-input" type="checkbox" />
+                            <label asp-for="Category.Status" class="form-check-label">Active</label>
                         </div>
+                    }
 
-                        <!-- Category Description -->
-                        <div class="form-group mb-3">
-                            <label asp-for="CategoryDescription" class="control-label">Category Description</label>
-                            <input asp-for="CategoryDescription" class="form-control" placeholder="Enter Category Description" />
-                            <span asp-validation-for="CategoryDescription" class="text-danger"></span>
-                        </div>
+                    <!-- Category Dropdown -->
+                    <div class="form-group mb-3">
+                        <partial name="_ParentCategoryDropdownForCreateOrUpdate" model="Model" />
+                    </div>
 
-                        @if (action == "Edit")
-                        {
-                            <!-- News Status (checkbox) -->
-                            <div class="form-group mb-3 form-check">
-                                <input asp-for="Status" class="form-check-input" type="checkbox" />
-                                <label asp-for="Status" class="form-check-label">Active</label>
-                            </div>
-                        }
+                    <div class="form-group mb-3">
+                        <input type="hidden" asp-for="CategoryId" />
+                    </div>
 
-                        <!-- Category Dropdown -->
-                        <div class="form-group mb-3">
-                            <partial name="_CategoryDropdownForCreateOrUpdate" model="categories" />
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary w-100">@action Category</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                            @action Category
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
