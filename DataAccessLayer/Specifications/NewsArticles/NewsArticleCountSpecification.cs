@@ -9,8 +9,8 @@ namespace DataAccessLayer.Specifications.NewsArticles
             || x.Headline.Contains(specParams.Search)
             || x.NewsTitle.Contains(specParams.Search)
             || x.CreatedBy.AccountName.Contains(specParams.Search))
-            && (!specParams.CategoryId.HasValue
-            || x.CategoryId == specParams.CategoryId)
+            && (!specParams.CatId.HasValue
+            || x.CategoryId == specParams.CatId)
             && (!specParams.Status.HasValue || x.NewsStatus == specParams.Status)
             )
         {

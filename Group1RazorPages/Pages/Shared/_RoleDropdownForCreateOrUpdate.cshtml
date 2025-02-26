@@ -1,0 +1,7 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+
+<div class="form-group d-flex align-items-center">
+    <label for="AccountRole" class="form-label">Role: </label>
+    <select asp-items="@(new SelectList(Model, "Value", "Text", ViewBag.SelectedRole))" name="AccountRole" class="form-control">
+    </select>
+</div>

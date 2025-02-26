@@ -4,8 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Set default page to be login page
+builder.Services.AddRazorPages()
+    .AddRazorPagesOptions(opt =>
+    {
+        opt.Conventions.AddPageRoute("/Account/Login", "");
+    });
+
 // Add services to the container.
-builder.Services.AddRazorPages();
 builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();

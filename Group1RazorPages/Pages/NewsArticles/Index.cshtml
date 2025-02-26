@@ -1,0 +1,95 @@
+﻿@page
+@model Group1RazorPages.Pages.NewsArticles.IndexModel
+@using BusinessServiceLayer.DTOs
+@using Group1RazorPages.Helpers
+@using Group1RazorPages.ViewModels
+@using BusinessObjects.Enums
+
+@{
+    ViewData["Title"] = "News Articles";
+    var role =(string) ViewData["Role"];
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12 title">
+            <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+        </div>
+    </div>
+
+    <!-- Show notification -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <form method="get" class="d-flex align-items-center justify-content-between">
+                <!-- Search Input Group -->
+                <partial name="_SearchBar" model="@Model.FilterModel" />
+
+                <!-- Sort Dropdown -->
+                <partial name="_SortDropdown" model="@Model.FilterModel" />
+
+                <!-- Category Dropdown -->
+                <partial name="_CategoryDropdown" model="@Model.FilterModel" />
+
+                <!-- Paginator -->
+                <partial name="_Paginator" model="@Model.FilterModel" />
+            </form>
+        </div>
+    </div>
+
+    <!-- Render News Article Cards -->
+    <div class="row">
+        @foreach (var article in Model.NewsArticles.Data)
+        {
+            <partial name="_NewsArticleCard" model="article" />
+        }
+    </div>
+    @if (!string.IsNullOrEmpty(role) && role.Equals(Role.Staff.ToString()))
+    {
+        <button type="button" class="btn btn-success" id="btnCreateArticle">
+            <i class="fas fa-plus"></i> Create New Article
+        </button>
+    }
+</div>
+
+<!-- Modal Container -->
+<div id="modalContainer">
+    <partial name="_NewsArticleCreateOrEditForm" model="Model" />
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Handle automatic modal show
+            @if (Model.ShowModal)
+            {
+                <text>$('#newsArticleModal').modal('show');</text>
+            }
+
+            // Handle create button click
+            $('#btnCreateArticle').click(function() {
+                $.get('@Url.Page("Index", "ShowCreateModal")', function(data) {
+                    $('#modalContainer').html(data);
+                    $('#newsArticleModal').modal('show');
+                });
+            });
+            
+            // Handle edit button click
+            $('.btn-edit-article').click(function() {
+                var id = $(this).data('id');
+                $.get('@Url.Page("Index", "ShowEditModal")', { id: id }, function(data) {
+                    $('#modalContainer').html(data);
+                    $('#newsArticleModal').modal('show');
+                });
+            });
+        })
+    </script>
+}

@@ -1,51 +1,152 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using BusinessObjects.Enums
+
+@{
+    int? currentUserId = null;
+    string currentUserRole = null;
+    string route = ViewContext.RouteData.Values["Page"].ToString();
+
+    if (User?.Identity?.IsAuthenticated == true)
+    {
+        var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        var userRoleClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+        if (!string.IsNullOrEmpty(userIdClaim))
+        {
+            currentUserId = Int32.Parse(userIdClaim);
+        }
+
+        currentUserRole = userRoleClaim;
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Group1RazorPages</title>
+    <title>@ViewData["Title"] - FU News Management</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Group1RazorPages.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Group1RazorPages</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+    <!-- Sidebar and Main Content Section -->
+    <div class="d-flex" style="min-height: 100vh;">
+        <!-- Sidebar -->
+        <nav id="sidebar" class="border-end min-vh-100 shadow-sm" style="min-height: 100vh; position: sticky; top: 0;">
+            <div class="sidebar-header py-4 px-4 bg-primary text-white">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="text-decoration-none text-white">
+                    <h4 class="fw-bold logo mb-0">FU News Management</h4>
+                </a>
             </div>
+            <ul class="list-unstyled components p-4">
+                <li class="mb-3 sidenav">
+                    <a class="text-dark d-block py-2 px-3 rounded text-decoration-none @(
+                            (route.StartsWith("/NewsArticles") 
+                            && !route.Equals("/NewsArticles/IndexHistory")) 
+                            ? "active" : "")"
+                       asp-area="" asp-page="/NewsArticles/Index">
+                        <i class="fa fa-home me-2"></i> Home
+                    </a>
+                </li>
+
+                @if (currentUserRole == Role.Staff.ToString())
+                {
+                    <li class="mb-3 sidenav">
+                        <a class="text-dark d-block py-2 px-3 rounded text-decoration-none @(route.StartsWith("/Categories") ? "active" : "")"
+                           asp-area="" asp-page="/Categories/Index">
+                            <i class="fa fa-list me-2"></i> Categories
+                        </a>
+                    </li>
+
+                    <li class="mb-3 sidenav">
+                        <a class="text-dark d-block py-2 px-3 rounded text-decoration-none @(route.Equals("/NewsArticles/IndexHistory") ? "active" : "")"
+                           asp-area="" asp-page="/NewsArticles/IndexHistory" asp-route-id="@currentUserId">
+                            <i class="fa fa-history me-2"></i> History
+                        </a>
+                    </li>
+
+                    <li class="mb-3 sidenav">
+                        <a class="text-dark d-block py-2 px-3 rounded text-decoration-none @(route.StartsWith("/Tags") ? "active" : "")"
+                           asp-area="" asp-page="/Tags/Index">
+                            <i class="fa fa-hashtag me-2"></i> Tags
+                        </a>
+                    </li>
+
+                }
+
+                @if (currentUserRole == Role.Staff.ToString() || currentUserRole == Role.Lecturer.ToString())
+                {
+                    <li class="mb-3 sidenav">
+                        <a class="text-dark d-block py-2 px-3 rounded text-decoration-none @(route.Equals("/Account/Details") ? "active" : "")"
+                           asp-area="" asp-page="/Account/Details" asp-route-id="@currentUserId">
+                            <i class="fa fa-user me-2"></i> Profile
+                        </a>
+                    </li>
+                }
+
+                @if (currentUserRole == Role.Admin.ToString())
+                {
+                    <li class="mb-3 sidenav">
+                        <a class="text-dark d-block py-2 px-3 rounded text-decoration-none @(route.StartsWith("/Account") ? "active" : "")"
+                           asp-area="" asp-page="/Account/Index">
+                            <i class="fa fa-user me-2"></i> Accounts
+                        </a>
+                    </li>
+
+                    <li class="mb-3 sidenav">
+                        <a class="text-dark d-block py-2 px-3 rounded text-decoration-none @(route.StartsWith("/Reports") ? "active" : "")"
+                           asp-area="" asp-page="/Reports/Index" asp-route-id="@currentUserId">
+                            <i class="fa fa-bar-chart me-2"></i> Report Statistic
+                        </a>
+                    </li>
+                }
+
+                @if (User.Identity == null || !User.Identity.IsAuthenticated)
+                {
+                    <li class="mb-3 sidenav">
+                        <a class="text-dark d-block py-2 px-3 rounded text-decoration-none @(route.Equals("/Account/Login") ? "active" : "")"
+                           asp-area="" asp-page="/Account/Login">
+                            <i class="fa fa-sign-in me-2"></i> Login
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li class="mb-3 sidenav">
+                        <form asp-area="" asp-page="/Account/Logout" asp-page-handler="Logout" method="post" class="d-inline">
+                            <button type="submit" class="text-dark d-block py-2 px-3 rounded text-decoration-none btn btn-link text-md nav-button">
+                                <i class="fa fa-sign-out me-2"></i> Logout
+                            </button>
+                        </form>
+                    </li>
+                }
+            </ul>
         </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
+
+
+        <!-- Main content -->
+        <main id="content" class="w-100 h-100">
+            <div class="container mt-5">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted bg-light">
         <div class="container">
-            &copy; 2025 - Group1RazorPages - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2025 - FU News Management - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

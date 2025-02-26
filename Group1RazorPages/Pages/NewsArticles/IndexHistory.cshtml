@@ -1,0 +1,42 @@
+﻿@using BusinessServiceLayer.DTOs
+@model IReadOnlyList<NewsArticleDTO>
+@{
+    ViewData["Title"] = "News History";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+        </div>
+    </div>
+
+    <!-- Category List -->
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>News Title</th>
+                <th>Category Name</th>
+                <th>Author Name</th>
+                <th>Created Date</th>
+                <th>Modified Date</th>
+                <th>News Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var newsArticle in Model)
+            {
+                <tr>
+                    <td>@newsArticle.Id</td>
+                    <td>@newsArticle.NewsTitle</td>
+                    <td>@newsArticle.CategoryName</td>
+                    <td>@newsArticle.AuthorName</td>
+                    <td>@newsArticle.CreatedDate</td>
+                    <td>@newsArticle.ModifiedDate</td>
+                    <td>@(newsArticle.NewsStatus ? "Published" : "Inactive")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

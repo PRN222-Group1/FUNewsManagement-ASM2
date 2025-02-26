@@ -1,0 +1,68 @@
+﻿@using BusinessObjects.Enums
+@model BusinessServiceLayer.DTOs.SystemAccountDTO
+
+@{
+    ViewData["Title"] = "Profile";
+
+    var role = (string) ViewData["Role"];
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Profile Card -->
+            <div class="card shadow-lg rounded">
+                <!-- Card Header: Profile Name -->
+                <div class="card-header text-center bg-primary text-white position-relative">
+                    <h3 class="mt-5 mb-0">@Model.AccountName</h3>
+                    <p class="mb-3">@Model.AccountRole</p>
+                </div>
+
+                <!-- Card Body: Profile Details -->
+                <div class="card-body">
+                    <dl class="row">
+                        <!-- Account Name -->
+                        <dt class="col-sm-4 text-end font-weight-bold">Name</dt>
+                        <dd class="col-sm-8">
+                            <span class="form-control-plaintext">@Model.AccountName</span>
+                        </dd>
+
+                        <!-- Account Email -->
+                        <dt class="col-sm-4 text-end font-weight-bold">Email</dt>
+                        <dd class="col-sm-8">
+                            <span class="form-control-plaintext">@Model.AccountEmail</span>
+                        </dd>
+
+                        <!-- Account Role -->
+                        <dt class="col-sm-4 text-end font-weight-bold">Role</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-info text-white">@Model.AccountRole</span>
+                        </dd>
+                    </dl>
+                </div>
+
+
+                <!-- Card Footer: Action Buttons -->
+                <div class="card-footer text-center d-flex justify-content-center gap-2">
+                    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
+                        <i class="fa fa-edit"></i> Edit Profile
+                    </a>
+
+                    @if (role == Role.Admin.ToString()) {
+                        <!-- Delete button -->
+                        <form asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to delete this account?')">
+                            <input type="hidden" name="id" value="@Model?.Id" />
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fa fa-trash-can"></i> Delete
+                            </button>
+                        </form>
+                    }
+
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="fa fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿@model BusinessServiceLayer.DTOs.TagToAddOrUpdateDTO
+
+@{
+    var action = ViewData["Action"];
+
+    ViewData["Title"] = action + " Tag";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Card for the form -->
+            <div class="card shadow-lg rounded">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">@action Tag</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="@action" method="post" onsubmit="return confirm('Are you sure you want to @action this tag?')">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- Tag Name -->
+                        <div class="form-group mb-3">
+                            <label asp-for="TagName" class="control-label">Tag Name</label>
+                            <input asp-for="TagName" class="form-control" placeholder="Enter Tag Name" />
+                            <span asp-validation-for="TagName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Tag Note -->
+                        <div class="form-group mb-3">
+                            <label asp-for="Note" class="control-label">Tag Note</label>
+                            <input asp-for="Note" class="form-control" placeholder="Enter Tag Note" />
+                            <span asp-validation-for="Note" class="text-danger"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary w-100">@action Tag</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

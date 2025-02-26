@@ -1,0 +1,76 @@
+﻿@page "{id:int?}"
+@model Group1RazorPages.Pages.NewsArticles.DetailsModel
+@using BusinessObjects.Enums
+
+@{
+    ViewData["Title"] = "Index";
+
+    // Replace \n with <br /> for proper line breaks in HTML
+    var formattedContent = Model.NewsArticle.NewsContent?.Replace("\n", "<br />");
+    var role = (string)ViewData["Role"];
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Back Button in Top Left Corner -->
+            <div class="d-flex justify-content-between mb-3">
+                <a class="btn btn-outline-secondary" asp-action="Index">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+
+            <article class="article-card">
+                <header class="article-header text-center mb-5">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h1 class="article-title display-4 font-weight-bold">@Model.NewsArticle.NewsTitle</h1>
+
+                        @if (!string.IsNullOrEmpty(role) && role.Equals(Role.Staff.ToString()))
+                        {
+                            <!-- Edit Button Next to Title -->
+                            <a class="btn btn-outline-primary btn-md d-flex align-items-center mx-2" asp-action="Edit" asp-route-id="@Model?.NewsArticle.Id">
+                                <i class="fas fa-edit me-2"></i> Edit
+                            </a>
+
+                            <!-- Delete button -->
+                            <form asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to delete this news article?')">
+                                <input type="hidden" name="id" value="@Model?.NewsArticle?.Id" />
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-trash-can"></i>
+                                </button>
+                            </form>
+                        }
+                    </div>
+                    <p class="article-meta text-muted">
+                        By <span class="text-primary">@Model?.NewsArticle.AuthorName</span> |
+                        <span>@Model?.NewsArticle.CreatedDate?.ToString("MM/dd/yyyy")</span> |
+                        <span class="badge badge-secondary">@Model?.NewsArticle.CategoryName</span>
+                    </p>
+                </header>
+
+                <div class="article-content">
+                    <h2 class="article-headline h4 font-weight-bold mb-4">@Model?.NewsArticle.Headline</h2>
+                    <div class="article-body p-4">
+                        <p class="lead">@Html.Raw(formattedContent)</p>
+                    </div>
+                </div>
+
+                <footer class="article-footer mt-5">
+                    <div class="article-tags mb-4">
+                        <h6 class="font-weight-bold">Tags:</h6>
+                        <ul class="list-inline">
+                            @foreach (var tag in Model.NewsArticle.Tags)
+                            {
+                                <li class="list-inline-item badge badge-light text-primary">@tag.TagName</li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="article-source">
+                        <h6 class="font-weight-bold">Source:</h6>
+                        <p class="text-muted">@Model.NewsArticle.NewsSource</p>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </div>
+</div>

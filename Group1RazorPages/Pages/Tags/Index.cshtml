@@ -1,0 +1,70 @@
+﻿@using Group1RazorPages.ViewModels
+@model IReadOnlyList<BusinessServiceLayer.DTOs.TagDTO>
+
+@{
+    ViewData["Title"] = "Manage Tags";
+
+    // Initialize search and sort properties
+    var filterModel = new FilterViewModel
+    {
+        SearchPlaceholder = "Search tag name...",
+        SearchQuery = (string)ViewData["CurrentFilter"],
+    };
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+        </div>
+    </div>
+
+    <!-- Show notification -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <!-- Add Category -->
+    <a asp-action="Create" class="btn btn-success mt-2 mb-3">+ Add Tag</a>
+
+    <form asp-action="Index" method="get" class="d-flex align-items-center justify-content-between">
+        <!-- Search Input Group -->
+        <partial name="_SearchBar" model="@filterModel" />
+    </form>
+
+    <!-- Category List -->
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tag Name</th>
+                <th>Note</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tag in Model)
+            {
+                <tr>
+                    <td>@tag.Id</td>
+                    <td>@tag.TagName</td>
+                    <td>@tag.Note</td>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a asp-action="Edit" asp-route-id="@(tag.Id)" class="btn btn-primary btn-sm mx-2">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
