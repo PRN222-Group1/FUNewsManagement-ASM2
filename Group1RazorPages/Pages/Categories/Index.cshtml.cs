@@ -1,9 +1,9 @@
 ﻿using BusinessObjects.Entities;
 using BusinessServiceLayer.DTOs;
 using BusinessServiceLayer.Interfaces;
-using BusinessServiceLayer.Services;
 using DataAccessLayer.Specifications.Categories;
 using Group1RazorPages.Extensions;
+using Group1RazorPages.Helpers;
 using Group1RazorPages.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,7 +20,7 @@ namespace Group1RazorPages.Pages.Categories
             _categoryService = categoryService;
         }
 
-        public IReadOnlyList<CategoryDTO> Categories { get; set; }
+        public Pagination<CategoryDTO> Categories { get; set; }
 
         public FilterViewModel FilterModel { get; set; }
 
@@ -129,8 +129,6 @@ namespace Group1RazorPages.Pages.Categories
                 return Page();
             }
 
-            var currentUserId = User.GetCurrentUserId();
-
             if (!CategoryId.HasValue)
             {
                 TempData["ErrorMessage"] = "Category ID is missing!";
@@ -174,13 +172,28 @@ namespace Group1RazorPages.Pages.Categories
             await InitializeDropdownsAsync();
 
             var categories = await _categoryService.GetCategoriesAsync(SpecParams);
+            var count = await _categoryService.CountCategoriesAsync(SpecParams);
 
-            Categories = categories;
+            Categories = new Pagination<CategoryDTO>(
+                SpecParams.PageNumber,
+                SpecParams.PageSize,
+                count,
+                categories
+            );
 
             FilterModel = new FilterViewModel
             {
+                SortOptions = new List<SortOption>
+                {
+                    new SortOption { Value = "nameAsc", Text = "Name (A-Z)" },
+                    new SortOption { Value = "nameDesc", Text = "Name (Z-A)" }
+                },
                 SearchPlaceholder = "Search category name...",
                 SearchQuery = SpecParams.Search,
+                SelectedSortOption = SpecParams.Sort,
+                PageNumber = SpecParams.PageNumber,
+                PageSize = SpecParams.PageSize,
+                PageCount = Convert.ToInt32(Math.Ceiling((decimal)count / SpecParams.PageSize)),
                 SelectedCategory = SpecParams.CatId,
                 Categories = ViewData["Categories"] as IReadOnlyList<CategoryDTO>
             };

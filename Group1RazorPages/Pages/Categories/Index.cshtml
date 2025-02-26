@@ -26,16 +26,22 @@
     }
 
     <!-- Add Category -->
-    <button type="button" class="btn btn-success" id="btnCreateCategory">
+    <button type="button" class="btn btn-primary" id="btnCreateCategory">
         <i class="fas fa-plus"></i> Create Category
     </button>
 
-    <form asp-action="Index" method="get" class="d-flex align-items-center justify-content-between">
+    <form method="get" class="d-flex align-items-center justify-content-between">
         <!-- Search Input Group -->
         <partial name="_SearchBar" model="@Model.FilterModel" />
 
+        <!-- Sort Dropdown -->
+        <partial name="_SortDropdown" model="@Model.FilterModel" />
+
         <!-- Category Dropdown -->
         <partial name="_CategoryDropdown" model="@Model.FilterModel" />
+
+        <!-- Paginator -->
+        <partial name="_Paginator" model="@Model.FilterModel" />
     </form>
 
     <!-- Category List -->
@@ -51,7 +57,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var category in Model.Categories)
+            @foreach (var category in Model.Categories.Data)
             {
                 <tr>
                     <td>@category.Id</td>

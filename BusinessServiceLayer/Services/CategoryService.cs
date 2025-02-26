@@ -85,4 +85,11 @@ public class CategoryService : ICategoryService
         var category = await _repository.GetByIdAsync(id);
         return _mapper.Map<Category, CategoryDTO>(category);
     }
+
+    public async Task<int> CountCategoriesAsync(CategorySpecParams specParams)
+    {
+        var spec = new CategoryCountSpecification(specParams);
+        var count = await _repository.CountAsync(spec);
+        return count;
+    }
 }

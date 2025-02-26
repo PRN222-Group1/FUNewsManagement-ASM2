@@ -9,6 +9,8 @@ namespace BusinessServiceLayer.DTOs
 
         public string? AccountEmail { get; set; }
 
+        public string? AccountPassword { get; set; }
+
         public string? ImageUrl { get; set; }
 
         public string? Gender { get; set; }

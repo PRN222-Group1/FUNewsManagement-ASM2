@@ -4,6 +4,7 @@ using BusinessServiceLayer.Interfaces;
 using BusinessObjects.Entities;
 using DataAccessLayer.Interfaces;
 using DataAccessLayer.Specifications.Tags;
+using DataAccessLayer.Specifications.Categories;
 
 namespace BusinessServiceLayer.Services
 {
@@ -16,6 +17,13 @@ namespace BusinessServiceLayer.Services
         {
             _repository = repository;
             _mapper = mapper;
+        }
+
+        public async Task<int> CountTagsAsync(TagSpecParams specParams)
+        {
+            var spec = new TagCountSpecification(specParams);
+            var count = await _repository.CountAsync(spec);
+            return count;
         }
 
         public async Task<bool> CreateTagAsync(TagToAddOrUpdateDTO tag)
@@ -35,9 +43,9 @@ namespace BusinessServiceLayer.Services
             return _mapper.Map<Tag, TagDTO>(tag);
         }
 
-        public async Task<IReadOnlyList<TagDTO>> GetTagsAsync(string? search)
+        public async Task<IReadOnlyList<TagDTO>> GetTagsAsync(TagSpecParams specParams)
         {
-            var spec = new TagSpecification(search);
+            var spec = new TagSpecification(specParams);
             var tags = await _repository.ListAsync(spec);
             return _mapper.Map<IReadOnlyList<Tag>, IReadOnlyList<TagDTO>>(tags);
         }

@@ -11,6 +11,24 @@ namespace DataAccessLayer.Specifications.Categories
         )
         {
             AddInclude(c => c.ParentCategory);
+            ApplyPaging(specParams.PageSize * (specParams.PageNumber - 1),
+                specParams.PageSize);
+
+            if (!string.IsNullOrEmpty(specParams.Sort))
+            {
+                switch (specParams.Sort)
+                {
+                    case "nameAsc":
+                        AddOrderBy(c => c.CategoryName);
+                        break;
+                    case "nameDesc":
+                        AddOrderByDescending(c => c.CategoryName);
+                        break;
+                    default:
+                        AddOrderBy(c => c.CategoryName);
+                        break;
+                }
+            }
         }
 
         public CategorySpecification(int id) : base(x => x.Id == id)

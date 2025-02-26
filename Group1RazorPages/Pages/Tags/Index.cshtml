@@ -1,15 +1,9 @@
-﻿@using Group1RazorPages.ViewModels
-@model IReadOnlyList<BusinessServiceLayer.DTOs.TagDTO>
+﻿@page
+@using Group1RazorPages.ViewModels
+@model Group1RazorPages.Pages.Tags.IndexModel
 
 @{
     ViewData["Title"] = "Manage Tags";
-
-    // Initialize search and sort properties
-    var filterModel = new FilterViewModel
-    {
-        SearchPlaceholder = "Search tag name...",
-        SearchQuery = (string)ViewData["CurrentFilter"],
-    };
 }
 
 <div class="container mt-5">
@@ -29,12 +23,20 @@
         <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
     }
 
-    <!-- Add Category -->
-    <a asp-action="Create" class="btn btn-success mt-2 mb-3">+ Add Tag</a>
+    <!-- Add Tag -->
+    <button type="button" class="btn btn-primary" id="btnCreateTag">
+        <i class="fas fa-plus"></i> Create Tag
+    </button>
 
     <form asp-action="Index" method="get" class="d-flex align-items-center justify-content-between">
         <!-- Search Input Group -->
-        <partial name="_SearchBar" model="@filterModel" />
+        <partial name="_SearchBar" model="@Model.FilterModel" />
+
+        <!-- Sort Dropdown -->
+        <partial name="_SortDropdown" model="@Model.FilterModel" />
+
+        <!-- Paginator -->
+        <partial name="_Paginator" model="@Model.FilterModel" />
     </form>
 
     <!-- Category List -->
@@ -48,7 +50,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var tag in Model)
+            @foreach (var tag in Model.Tags.Data)
             {
                 <tr>
                     <td>@tag.Id</td>
@@ -56,9 +58,9 @@
                     <td>@tag.Note</td>
                     <td>
                         <div class="d-flex justify-content-center align-items-center">
-                            <a asp-action="Edit" asp-route-id="@(tag.Id)" class="btn btn-primary btn-sm mx-2">
-                                <i class="fa fa-edit"></i>
-                            </a>
+                            <button class="btn btn-outline-primary btn-md d-flex align-items-center mx-2 btn-edit-tag" data-id="@tag.Id">
+                                <i class="fas fa-edit"></i>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -67,4 +69,36 @@
     </table>
 </div>
 
+<!-- Modal Container -->
+<div id="modalContainer">
+    <partial name="_TagCreateOrEditForm" model="Model" />
+</div>
 
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Handle automatic modal show
+            @if (Model.ShowModal)
+            {
+                <text>$('#tagModal').modal('show');</text>
+            }
+
+            // Handle create button click
+            $('#btnCreateTag').click(function() {
+                $.get('@Url.Page("Index", "ShowCreateModal")', function(data) {
+                    $('#modalContainer').html(data);
+                    $('#tagModal').modal('show');
+                });
+            });
+
+            // Handle edit button click
+            $('.btn-edit-tag').click(function() {
+                var id = $(this).data('id');
+                $.get('@Url.Page("Index", "ShowEditModal")', { id: id }, function(data) {
+                    $('#modalContainer').html(data);
+                    $('#tagModal').modal('show');
+                });
+            });
+        })
+    </script>
+}

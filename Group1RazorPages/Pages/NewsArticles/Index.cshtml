@@ -29,6 +29,12 @@
 
     <div class="row mb-3">
         <div class="col-md-12">
+            @if (!string.IsNullOrEmpty(role) && role.Equals(Role.Staff.ToString()))
+            {
+                <button type="button" class="btn btn-primary" id="btnCreateArticle">
+                    <i class="fas fa-plus"></i> Create New Article
+                </button>
+            }
             <form method="get" class="d-flex align-items-center justify-content-between">
                 <!-- Search Input Group -->
                 <partial name="_SearchBar" model="@Model.FilterModel" />
@@ -52,12 +58,6 @@
             <partial name="_NewsArticleCard" model="article" />
         }
     </div>
-    @if (!string.IsNullOrEmpty(role) && role.Equals(Role.Staff.ToString()))
-    {
-        <button type="button" class="btn btn-success" id="btnCreateArticle">
-            <i class="fas fa-plus"></i> Create New Article
-        </button>
-    }
 </div>
 
 <!-- Modal Container -->

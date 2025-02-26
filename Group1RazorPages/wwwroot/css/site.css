@@ -130,6 +130,15 @@ a:hover {
     border-color: #e76f51 !important;
 }
 
+th {
+    background: #264653 !important;
+    color: white;
+}
+
+h1 {
+    color: #264653;
+}
+
 .article-card {
     background: #fff;
     border-radius: 10px;
@@ -207,12 +216,11 @@ html {
 }
 
 .card {
-    background: #f4f1de;
+    background: #f8f9fa;
 }
 
 body {
-    background: #fffcf2;
-    margin-bottom: 60px;
+    background: #f4f3ee;
 }
 
 .nav-button {
@@ -220,7 +228,7 @@ body {
 }
 
 #sidebar {
-    background: #f4f1de;
+    background: #f8f9fa;
     height: 100%;
 }
 

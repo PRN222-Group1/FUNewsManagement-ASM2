@@ -1,0 +1,64 @@
+﻿@using BusinessObjects.Enums
+@using Group1RazorPages.ViewModels
+@model Group1RazorPages.Pages.Account.DetailsModel
+
+<!-- Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="profileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                }
+                <form id="profileForm" method="post" asp-page-handler="Edit" onsubmit="confirm('Are you sure you want to edit this profile?')">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Account Name -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Account.AccountName" class="control-label">Account Name</label>
+                        <input asp-for="Account.AccountName" class="form-control" placeholder="Enter Profile Name" />
+                        <span asp-validation-for="Account.AccountName" class="text-danger"></span>
+                    </div>
+
+                    <!-- Account Email -->
+                    <div class="form-group mb-3">
+                        <input asp-for="Account.AccountEmail" class="form-control" type="hidden" />
+                    </div>
+
+                    <!-- Account Password -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Account.AccountPassword" class="control-label">Account Password</label>
+                        <input asp-for="Account.AccountPassword" class="form-control" type="password" placeholder="Enter Account Password" />
+                        <span asp-validation-for="Account.AccountPassword" class="text-danger"></span>
+                    </div>
+
+                    <!-- Account Confirm Password -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Account.AccountConfirmPassword" class="control-label">Account Confirm Password</label>
+                        <input asp-for="Account.AccountConfirmPassword" class="form-control" placeholder="Enter Account Confirm Password" type="password" />
+                        <span asp-validation-for="Account.AccountConfirmPassword" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <input asp-for="Account.AccountRole" class="form-control" type="hidden" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <input type="hidden" asp-for="AccountId" class="form-control" />
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary w-100">Edit Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

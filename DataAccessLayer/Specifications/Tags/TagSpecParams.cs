@@ -1,10 +1,8 @@
-﻿namespace DataAccessLayer.Specifications.Categories
+﻿namespace DataAccessLayer.Specifications.Tags
 {
-    public class CategorySpecParams : PagingParams
+    public class TagSpecParams : PagingParams
     {
-        public int? CatId { get; set; } = null;
         public string? Sort { get; set; }
-        public bool? Status { get; set; }
 
         private string _search;
 

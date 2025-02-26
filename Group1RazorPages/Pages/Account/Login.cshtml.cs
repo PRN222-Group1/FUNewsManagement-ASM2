@@ -18,8 +18,8 @@ namespace Group1RazorPages.Pages.Account
         public LoginModel(IAccountService accountService, IConfiguration configuration)
         {
             _accountService = accountService;
-            _adminEmail = configuration["AdminCredentials:Email"];
-            _adminPassword = configuration["AdminCredentials:Password"];
+            _adminEmail = configuration["AdminAccount:Email"];
+            _adminPassword = configuration["AdminAccount:Password"];
         }
 
         [BindProperty]
