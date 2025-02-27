@@ -96,6 +96,7 @@ namespace BusinessServiceLayer.Services
             accountToUpdate.AccountEmail = account.AccountEmail;
             accountToUpdate.AccountRole = account.AccountRole;
             accountToUpdate.AccountPassword = account.AccountPassword;
+            accountToUpdate.Gender = (Gender) account.Gender;
 
             _accountRepository.Update(accountToUpdate);
             result = await _accountRepository.SaveAllAsync();
@@ -115,6 +116,23 @@ namespace BusinessServiceLayer.Services
             accountToDelete.AccountRole = (int) Role.Inactive;
 
             _accountRepository.Update(accountToDelete);
+            result = await _accountRepository.SaveAllAsync();
+            return result;
+        }
+
+        public async Task<bool> UpdateAccountImageAsync(int id, string imageUrl)
+        {
+            var result = false;
+            var accountToUpdate = await _accountRepository.GetByIdAsync(id);
+
+            if (accountToUpdate == null)
+            {
+                return result;
+            }
+
+            accountToUpdate.ImageUrl= imageUrl;
+
+            _accountRepository.Update(accountToUpdate);
             result = await _accountRepository.SaveAllAsync();
             return result;
         }

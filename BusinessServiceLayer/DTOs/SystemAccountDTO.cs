@@ -1,6 +1,4 @@
-﻿using BusinessObjects.Entities;
-
-namespace BusinessServiceLayer.DTOs
+﻿namespace BusinessServiceLayer.DTOs
 {
     public class SystemAccountDTO
     {

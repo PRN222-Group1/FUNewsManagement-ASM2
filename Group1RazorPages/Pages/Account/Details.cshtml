@@ -4,8 +4,6 @@
 
 @{
     ViewData["Title"] = "Profile";
-
-    var role = (string) ViewData["Role"];
 }
 
 <div class="container mt-5">
@@ -16,9 +14,23 @@
 
                 <div class="card-header text-center bg-primary text-white position-relative">
                     <!-- Card Header: Profile Image -->
-                    <div class="text-center mt-4">
+                    <div class="text-center mt-4 position-relative" style="display: inline-block;">
                         <img src="@Model.AccountDetails.ImageUrl" alt="Profile Image" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+
+                        <!-- Image Upload Button -->
+                        <div class="position-absolute" style="bottom: 0; right: 0">
+                            <form method="post" enctype="multipart/form-data" asp-page-handler="UploadImage">
+                                <input type="hidden" name="id" value="@Model.AccountDetails.Id" />
+                                <div class="image-upload">
+                                    <button class="btn btn-secondary rounded-circle shadow-sm" onclick="event.preventDefault(); document.getElementById('file-input').click();">
+                                        <i class="fas fa-camera"></i>
+                                    </button>
+                                    <input id="file-input" name="profileImage" type="file" accept="image/*" style="display: none;" onchange="this.form.submit()" />
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
 
                     <!-- Card Header: Profile Name -->
                     <h3 class="mt-5 mb-2">@Model.AccountDetails.AccountName</h3>
@@ -38,6 +50,12 @@
                         <dt class="col-sm-4 text-end font-weight-bold">Email</dt>
                         <dd class="col-sm-8">
                             <span class="form-control-plaintext">@Model.AccountDetails.AccountEmail</span>
+                        </dd>
+
+                        <!-- Account Gender -->
+                        <dt class="col-sm-4 text-end font-weight-bold">Gender</dt>
+                        <dd class="col-sm-8">
+                            <span class="form-control-plaintext">@Model.AccountDetails.Gender</span>
                         </dd>
 
                         <!-- Account Role -->

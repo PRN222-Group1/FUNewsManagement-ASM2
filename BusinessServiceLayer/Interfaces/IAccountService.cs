@@ -13,6 +13,7 @@ namespace BusinessServiceLayer.Interfaces
         Task<SystemAccountDTO> GetAccountByIdAsync(int id);
         Task<bool> CreateAccountAsync(SystemAccountToAddOrUpdateDTO account);
         Task<bool> UpdateAccountAsync(int id, SystemAccountToAddOrUpdateDTO account);
+        Task<bool> UpdateAccountImageAsync(int id, string imageUrl);
         Task<bool> DeleteAccountAsync(int id);
     }
 }

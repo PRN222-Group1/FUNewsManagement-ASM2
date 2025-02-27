@@ -1,0 +1,14 @@
+﻿@using Group1RazorPages.ViewModels
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model Group1RazorPages.Pages.Account.IndexModel
+
+@{
+    var selectedGender = (int?)ViewData["SelectedGender"];
+}
+
+<div class="form-group d-flex align-items-center">
+    <label for="Gender" class="form-label">Gender: </label>
+    <select asp-items="@(new SelectList((List<GenderOption>)ViewData["GendersList"], "Value", "Text", selectedGender))"
+            asp-for="@Model.Account.Gender" class="form-control">
+    </select>
+</div>

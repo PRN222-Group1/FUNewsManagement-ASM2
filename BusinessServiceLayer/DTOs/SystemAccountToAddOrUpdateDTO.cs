@@ -15,6 +15,10 @@ namespace BusinessServiceLayer.DTOs
         [Required(ErrorMessage = "Role is required")]
         public int? AccountRole { get; set; }
 
+        public int? Gender { get; set; }
+
+        public string? ImageUrl { get; set; }
+
         [Required(ErrorMessage = "Password is required")]
         [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long")]
         [RegularExpression(@"^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$",
