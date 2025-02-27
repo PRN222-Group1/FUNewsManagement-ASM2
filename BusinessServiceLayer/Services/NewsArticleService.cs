@@ -125,6 +125,7 @@ namespace BusinessServiceLayer.Services
             if (newsArticleToDelete == null) return false;
 
             newsArticleToDelete.NewsStatus = false;
+            newsArticleToDelete.ModifiedDate = DateTime.UtcNow;
 
             _unitOfWork.Repository<NewsArticle>().Update(newsArticleToDelete);
             var result = await _unitOfWork.Complete();
@@ -138,11 +139,30 @@ namespace BusinessServiceLayer.Services
             return _mapper.Map<IReadOnlyList<Tag>, IReadOnlyList<TagDTO>>(tags);
         }
 
-        public async Task<IReadOnlyList<NewsArticleDTO>> GetNewsArticleHistoryAsync(int accountId)
+        public async Task<IReadOnlyList<NewsArticleDTO>> GetNewsArticleHistoryAsync(int accountId, DateTime? startDate, DateTime? endDate)
         {
-            var spec = new NewsArticleHistorySpecification(accountId);
+            var spec = new NewsArticleSpecification(accountId, startDate, endDate);
             var newsArticles = await _unitOfWork.Repository<NewsArticle>().ListAsync(spec);
             return _mapper.Map<IReadOnlyList<NewsArticle>, IReadOnlyList<NewsArticleDTO>>(newsArticles);
+        }
+
+        public async Task<bool> UpdateNewsArticleImageAsync(int id, int currentUserId, string imageUrl)
+        {
+            var result = false;
+            var newsArticleToUpdate = await _unitOfWork.Repository<NewsArticle>().GetByIdAsync(id);
+
+            if (newsArticleToUpdate == null)
+            {
+                return result;
+            }
+
+            newsArticleToUpdate.UpdatedById = currentUserId;
+            newsArticleToUpdate.ModifiedDate = DateTime.UtcNow;
+            newsArticleToUpdate.ImageUrl = imageUrl;
+
+            _unitOfWork.Repository<NewsArticle>().Update(newsArticleToUpdate);
+            result = await _unitOfWork.Repository<NewsArticle>().SaveAllAsync();
+            return result;
         }
     }
 }

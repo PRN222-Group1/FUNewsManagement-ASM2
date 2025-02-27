@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using DataAccessLayer.Data;
 using DataAccessLayer.Interfaces;
+using Group1RazorPages.Services;
+using Microsoft.AspNetCore.Hosting;
+using Group1RazorPages.Interfaces;
 
 namespace Group1RazorPages.Extensions
 {
@@ -34,6 +37,9 @@ namespace Group1RazorPages.Extensions
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IReportService, ReportService>();
+            services.AddSingleton<IFileStorageService, WebFileStorageService>();
+            services.AddScoped<IUploadService, UploadService>();
+            services.AddScoped<ISignalRService, SignalRService>();
 
             // Configure Cookie
             services.Configure<CookiePolicyOptions>(options =>
@@ -44,6 +50,9 @@ namespace Group1RazorPages.Extensions
 
             // Add Authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+
+            // Add SignalR
+            services.AddSignalR();
 
             return services;
         }

@@ -1,0 +1,90 @@
+﻿@using BusinessServiceLayer.DTOs
+@model Group1RazorPages.Pages.NewsArticles.IndexModel
+
+@{
+    var action = ViewData["Action"] as string;
+}
+
+<!-- Modal -->
+<div class="modal fade" id="newsArticleModal" tabindex="-1" aria-labelledby="newsArticleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="newsArticleModalLabel">@action News Article</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                }
+
+                <form id="newsArticleForm" method="post" asp-page-handler="@action" onsubmit="confirm('Are you sure you want to @action this news article?')">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- News Title -->
+                    <div class="form-group mb-3">
+                        <label asp-for="NewsArticle.NewsTitle" class="control-label">News Title</label>
+                        <input asp-for="NewsArticle.NewsTitle" class="form-control" placeholder="Enter the news title" />
+                        <span asp-validation-for="NewsArticle.NewsTitle" class="text-danger"></span>
+                    </div>
+
+                    <!-- Headline -->
+                    <div class="form-group mb-3">
+                        <label asp-for="NewsArticle.Headline" class="control-label">News Headline</label>
+                        <input asp-for="NewsArticle.Headline" class="form-control" placeholder="Enter a headline" />
+                        <span asp-validation-for="NewsArticle.Headline" class="text-danger"></span>
+                    </div>
+
+                    <!-- News Content (textarea for paragraph input) -->
+                    <div class="form-group mb-3">
+                        <label asp-for="NewsArticle.NewsContent" class="control-label">News Content</label>
+                        <textarea asp-for="NewsArticle.NewsContent" class="form-control" rows="6" placeholder="Write your news content here..."></textarea>
+                        <span asp-validation-for="NewsArticle.NewsContent" class="text-danger"></span>
+                    </div>
+
+                    <!-- News Source -->
+                    <div class="form-group mb-3">
+                        <label asp-for="NewsArticle.NewsSource" class="control-label">News Source</label>
+                        <input asp-for="NewsArticle.NewsSource" class="form-control" placeholder="Enter the news source" />
+                        <span asp-validation-for="NewsArticle.NewsSource" class="text-danger"></span>
+                    </div>
+
+                    @if (action == "Edit")
+                    {
+                        <!-- News Status (checkbox) -->
+                        <div class="form-group mb-3 form-check">
+                            <input asp-for="NewsArticle.NewsStatus" class="form-check-input" type="checkbox" />
+                            <label asp-for="NewsArticle.NewsStatus" class="form-check-label">Publish News</label>
+                        </div>
+                    }
+
+                    <!-- Category Dropdown -->
+                    <div class="form-group mb-3">
+                        <partial name="_CategoryDropdownForCreateOrUpdate" model="Model" />
+                    </div>
+
+                    <!-- Tags Picker -->
+                    <div class="form-group mb-3">
+                        <!-- Hidden field to store selected tag IDs -->
+                        <input type="hidden" asp-for="NewsArticle.TagIds" id="TagIds"/>
+
+                        <!-- Reusable Tag Picker -->
+                        <partial name="_TagPicker" model="Model" />
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <input type="hidden" asp-for="ArticleId" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                            @action News Article
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

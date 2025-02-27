@@ -1,0 +1,71 @@
+﻿@using BusinessServiceLayer.DTOs
+@model Group1RazorPages.Pages.NewsArticles.IndexModel
+
+<div>
+    <label class="control-label">Tags</label>
+
+    <!-- Checkboxes for selecting tags -->
+    <div id="tagCheckboxes">
+        @foreach (var tag in ViewData["Tags"] as IReadOnlyList<TagDTO>)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="@tag.Id" id="tag_@tag.Id"
+                       data-tag-id="@tag.Id"
+                @((string?)ViewData["SelectedTagIds"] != null && ((string)ViewData["SelectedTagIds"]).Contains(tag.Id.ToString()) ? "checked" : "") />
+                <label class="form-check-label" for="tag_@tag.Id">
+                    @tag.TagName
+                </label>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    (function () {
+        // Only declare 'selectedTagIds' if it's not already defined globally
+        if (typeof selectedTagIds === 'undefined') {
+            var selectedTagIds = [];
+        }
+
+        // Declare 'tagCheckboxes' and 'tagIdsHiddenInput' in a local scope, not globally
+        let tagCheckboxes = document.querySelectorAll('#tagCheckboxes input[type="checkbox"]');
+        let tagIdsHiddenInput = document.getElementById('TagIds');
+
+        // Pre-populate the selectedTagIds array with the already selected tags (checked checkboxes)
+        tagCheckboxes.forEach(checkbox => {
+            const tagId = checkbox.getAttribute('data-tag-id');
+            if (checkbox.checked) {
+                selectedTagIds.push(tagId);
+            }
+        });
+
+        // Update the hidden input field with the initial tag IDs (if any are preselected)
+        if (tagIdsHiddenInput) {
+            tagIdsHiddenInput.value = selectedTagIds.join(',');
+        }
+
+        // Add event listener to each checkbox to update selectedTagIds
+        tagCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const tagId = this.getAttribute('data-tag-id');
+
+                if (this.checked) {
+                    // Add tag ID to the selectedTagIds array if it's checked
+                    if (!selectedTagIds.includes(tagId)) {
+                        selectedTagIds.push(tagId);
+                    }
+                } else {
+                    // Remove tag ID from the selectedTagIds array if it's unchecked
+                    selectedTagIds = selectedTagIds.filter(id => id != tagId);
+                }
+
+                // Update the hidden field with selected tag IDs (comma-separated)
+                if (tagIdsHiddenInput) {
+                    tagIdsHiddenInput.value = selectedTagIds.join(',');
+                }
+            });
+        });
+    })();
+</script>
+
+

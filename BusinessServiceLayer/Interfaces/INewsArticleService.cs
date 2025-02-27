@@ -11,8 +11,9 @@ namespace BusinessServiceLayer.Interfaces
         Task<IReadOnlyList<CategoryDTO>> GetAllCategories();
         Task<bool> CreateNewsArticleAsync(NewsArticleToAddOrUpdateDTO newsArticle);
         Task<bool> UpdateNewsArticleAsync(int id, NewsArticleToAddOrUpdateDTO newsArticle);
+        Task<bool> UpdateNewsArticleImageAsync(int id, int currentUserId, string imageUrl);
         Task<bool> DeleteNewsArticleAsync(int id);
         Task<IReadOnlyList<TagDTO>> GetAllTags();
-        Task<IReadOnlyList<NewsArticleDTO>> GetNewsArticleHistoryAsync(int accountId);
+        Task<IReadOnlyList<NewsArticleDTO>> GetNewsArticleHistoryAsync(int accountId, DateTime? startDate, DateTime? endDate);
     }
 }

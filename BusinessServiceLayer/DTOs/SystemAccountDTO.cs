@@ -1,6 +1,4 @@
-﻿using BusinessObjects.Entities;
-
-namespace BusinessServiceLayer.DTOs
+﻿namespace BusinessServiceLayer.DTOs
 {
     public class SystemAccountDTO
     {
@@ -8,6 +6,8 @@ namespace BusinessServiceLayer.DTOs
         public string? AccountName { get; set; }
 
         public string? AccountEmail { get; set; }
+
+        public string? AccountPassword { get; set; }
 
         public string? ImageUrl { get; set; }
 

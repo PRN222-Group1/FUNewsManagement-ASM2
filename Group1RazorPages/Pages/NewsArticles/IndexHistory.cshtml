@@ -1,0 +1,89 @@
+﻿@page "{id:int?}"
+@using BusinessServiceLayer.DTOs
+@model Group1RazorPages.Pages.NewsArticles.IndexHistoryModel
+
+@{
+    ViewData["Title"] = "News History";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+        </div>
+    </div>
+
+    <!-- Show notification -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <!-- Date range filter form -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fa fa-calendar me-2"></i> Start Date
+                        </span>
+                        <input asp-for="@Model.FilterModel.StartDate" class="form-control" name="StartDate" type="date" />
+                    </div>
+                    <span asp-validation-for="@Model.FilterModel.StartDate" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fa fa-calendar me-2"></i> End Date
+                        </span>
+                        <input asp-for="@Model.FilterModel.EndDate" class="form-control" name="EndDate" type="date" />
+                    </div>
+                    <span asp-validation-for="@Model.FilterModel.EndDate" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fa fa-search me-2"></i> Apply Filter
+                    </button>
+                    <a href="@Url.Action("IndexHistory")" class="btn btn-outline-secondary">
+                        <i class="fa fa-history me-1"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- News Article List -->
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>News Title</th>
+                <th>Category Name</th>
+                <th>Author Name</th>
+                <th>Created Date</th>
+                <th>Modified Date</th>
+                <th>News Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var newsArticle in Model.NewsArticles)
+            {
+                <tr>
+                    <td>@newsArticle.Id</td>
+                    <td>@newsArticle.NewsTitle</td>
+                    <td>@newsArticle.CategoryName</td>
+                    <td>@newsArticle.AuthorName</td>
+                    <td>@newsArticle.CreatedDate</td>
+                    <td>@newsArticle.ModifiedDate</td>
+                    <td>@(newsArticle.NewsStatus ? "Published" : "Draft")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/pages/history.js"></script>

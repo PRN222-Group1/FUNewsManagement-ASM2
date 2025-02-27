@@ -1,0 +1,46 @@
+﻿<!-- Form for pagination -->
+
+<div class="d-flex mt-3">
+    <input type="hidden" name="PageNumber" id="PageNumberInput" value="@Model.PageNumber" />
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <!-- Previous Button -->
+            <li class="page-item @(Model.PageNumber > 1 ? "" : "disabled")">
+                <a class="page-link" onclick="setPageNumber(@(Model.PageNumber - 1), this);" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <!-- Page Numbers -->
+            @for (int i = 1; i <= Model.PageCount; i++)
+            {
+                <li class="page-item @(Model.PageNumber == i ? "active" : "")">
+                    <a onclick="setPageNumber(@i, this);" class="page-link">@i</a>
+                </li>
+            }
+
+            <!-- Next Button -->
+            <li class="page-item @(Model.PageNumber < Model.PageCount ? "" : "disabled")">
+                <a class="page-link" onclick="setPageNumber(@(Model.PageNumber + 1), this);" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+<!-- JavaScript to handle form submission -->
+<script>
+    function setPageNumber(pageNumber, element) {
+        // Set the value of the hidden input field
+        document.getElementById('PageNumberInput').value = pageNumber;
+
+        // Find the parent form
+        const form = element.closest('form');
+
+        // Submit the form by its id
+        form.submit();
+    }
+</script>

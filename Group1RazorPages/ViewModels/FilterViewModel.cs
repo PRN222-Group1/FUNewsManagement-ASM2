@@ -14,6 +14,12 @@ namespace Group1RazorPages.ViewModels
         public string Text { get; set; }
     }
 
+    public class GenderOption
+    {
+        public int Value { get; set; }
+        public string Text { get; set; }
+    }
+
     public class FilterViewModel
     {
         public string SearchPlaceholder { get; set; }

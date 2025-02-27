@@ -1,0 +1,106 @@
+﻿@page
+@using Group1RazorPages.ViewModels
+@model Group1RazorPages.Pages.Tags.IndexModel
+
+@{
+    ViewData["Title"] = "Manage Tags";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+        </div>
+    </div>
+
+    <!-- Show notification -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <!-- Add Tag -->
+    <button type="button" class="btn btn-primary mb-3" id="btnCreateTag">
+        <i class="fas fa-plus"></i> Create Tag
+    </button>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="d-flex align-items-center justify-content-between">
+                <!-- Search Input Group -->
+                <partial name="_SearchBar" model="@Model.FilterModel" />
+
+                <!-- Sort Dropdown -->
+                <partial name="_SortDropdown" model="@Model.FilterModel" />
+
+                <!-- Paginator -->
+                <partial name="_Paginator" model="@Model.FilterModel" />
+            </form>
+        </div>
+    </div>
+
+    <!-- Category List -->
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tag Name</th>
+                <th>Note</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tag in Model.Tags.Data)
+            {
+                <tr>
+                    <td>@tag.Id</td>
+                    <td>@tag.TagName</td>
+                    <td>@tag.Note</td>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <button class="btn btn-outline-primary btn-md d-flex align-items-center mx-2 btn-edit-tag" data-id="@tag.Id">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Container -->
+<div id="modalContainer">
+    <partial name="_TagCreateOrEditForm" model="Model" />
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Handle automatic modal show
+            @if (Model.ShowModal)
+            {
+                <text>$('#tagModal').modal('show');</text>
+            }
+
+            // Handle create button click
+            $('#btnCreateTag').click(function() {
+                $.get('@Url.Page("Index", "ShowCreateModal")', function(data) {
+                    $('#modalContainer').html(data);
+                    $('#tagModal').modal('show');
+                });
+            });
+
+            // Handle edit button click
+            $('.btn-edit-tag').click(function() {
+                var id = $(this).data('id');
+                $.get('@Url.Page("Index", "ShowEditModal")', { id: id }, function(data) {
+                    $('#modalContainer').html(data);
+                    $('#tagModal').modal('show');
+                });
+            });
+        })
+    </script>
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/pages/tags.js"></script>
+}

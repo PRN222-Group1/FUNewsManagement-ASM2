@@ -1,0 +1,12 @@
+﻿@model Group1RazorPages.ViewModels.FilterViewModel
+
+<div class="form-group d-flex align-items-center">
+    <label for="Sort" class="text-white"><i class="fa fa-filter"></i> Sort by: </label>
+    <select name="Sort" class="form-control" asp-for="@Model.SelectedSortOption" onchange="this.form.submit();">
+        <option value="">Select Sort Mode</option>
+        @foreach (var option in @Model.SortOptions)
+        {
+            <option value="@option.Value">@option.Text</option>
+        }
+    </select>
+</div>

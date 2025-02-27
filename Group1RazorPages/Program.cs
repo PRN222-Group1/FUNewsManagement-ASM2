@@ -1,11 +1,18 @@
 using DataAccessLayer.Data;
 using Group1RazorPages.Extensions;
+using Group1RazorPages.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Set default page to be login page
+builder.Services.AddRazorPages()
+    .AddRazorPagesOptions(opt =>
+    {
+        opt.Conventions.AddPageRoute("/Account/Login", "");
+    });
+
 // Add services to the container.
-builder.Services.AddRazorPages();
 builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
@@ -19,6 +26,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -26,6 +34,8 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.MapHub<SignalRServer>(builder.Configuration["SignalRUrl"]);
 
 app.MapRazorPages();
 
@@ -47,6 +57,5 @@ catch (Exception ex)
 {
     logger.LogError(ex, "A message occured during migration");
 }
-
 
 app.Run();
