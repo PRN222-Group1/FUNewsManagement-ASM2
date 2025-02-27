@@ -1,5 +1,6 @@
 using DataAccessLayer.Data;
 using Group1RazorPages.Extensions;
+using Group1RazorPages.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
@@ -32,6 +34,8 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.MapHub<SignalRServer>(builder.Configuration["SignalRUrl"]);
 
 app.MapRazorPages();
 

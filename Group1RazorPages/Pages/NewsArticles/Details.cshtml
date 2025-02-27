@@ -3,15 +3,14 @@
 @using BusinessObjects.Enums
 
 @{
-    ViewData["Title"] = "Index";
-
+    var role = (string?) ViewData["Role"];
     // Replace \n with <br /> for proper line breaks in HTML
-    var formattedContent = Model.NewsArticle.NewsContent?.Replace("\n", "<br />");
+    var formattedContent = Model.NewsArticleDetails.NewsContent?.Replace("\n", "<br />");
 }
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <!-- Back Button in Top Left Corner -->
             <div class="d-flex justify-content-between mb-3">
                 <a class="btn btn-outline-secondary" asp-page="/NewsArticles/Index">
@@ -19,22 +18,41 @@
                 </a>
             </div>
 
+            <!-- Show notification -->
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
             <article class="article-card">
                 <header class="article-header text-center mb-5">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h1 class="article-title display-4 font-weight-bold">@Model.NewsArticle.NewsTitle</h1>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <h1 class="article-title display-4 font-weight-bold">@Model.NewsArticleDetails.NewsTitle</h1>
                     </div>
-                    <p class="article-meta text-muted">
-                        By <span class="text-primary">@Model?.NewsArticle.AuthorName</span> |
-                        <span>@Model?.NewsArticle.CreatedDate?.ToString("MM/dd/yyyy")</span> |
-                        <span class="badge badge-secondary">@Model?.NewsArticle.CategoryName</span>
+                    <p class="article-meta text-muted text-center">
+                        By <span class="text-secondary">@Model?.NewsArticleDetails.AuthorName</span> |
+                        <span>@Model?.NewsArticleDetails.CreatedDate?.ToString("MM/dd/yyyy")</span> |
+                        <span class="badge bg-primary">@Model?.NewsArticleDetails.CategoryName</span>
                     </p>
+                    @if (role == Role.Staff.ToString()){
+                        <div>
+                            <form method="post" enctype="multipart/form-data" asp-page-handler="UploadImage">
+                                <input type="hidden" name="id" value="@Model.NewsArticleDetails.Id" />
+                                <div class="image-upload">
+                                    <label for="file-input" class="btn btn-secondary">
+                                        <i class="fas fa-camera me-2"></i> Change Cover
+                                    </label>
+                                    <input id="file-input" name="newsArticleImage" type="file" accept="image/*" style="display: none;" onchange="this.form.submit()" />
+                                </div>
+                            </form>
+                        </div>
+                    }
                 </header>
 
                 <div class="article-content">
-                    <h2 class="article-headline h4 font-weight-bold mb-4">@Model?.NewsArticle.Headline</h2>
+                    <h2 class="article-headline h4 font-weight-bold mb-4">@Model?.NewsArticleDetails.Headline</h2>
                     <div class="article-body p-4">
-                        <img class="mb-3 rounded article-img" src="@Model?.NewsArticle.ImageUrl" />
+                        <img class="mb-3 rounded article-img" src="@Model?.NewsArticleDetails.ImageUrl" />
                         <p class="lead">@Html.Raw(formattedContent)</p>
                     </div>
                 </div>
@@ -43,7 +61,7 @@
                     <div class="article-tags mb-4">
                         <h6 class="font-weight-bold">Tags:</h6>
                         <ul class="list-inline">
-                            @foreach (var tag in Model.NewsArticle.Tags)
+                            @foreach (var tag in Model.NewsArticleDetails.Tags)
                             {
                                 <li class="list-inline-item badge badge-light text-primary">@tag.TagName</li>
                             }
@@ -51,10 +69,13 @@
                     </div>
                     <div class="article-source">
                         <h6 class="font-weight-bold">Source:</h6>
-                        <p class="text-muted">@Model.NewsArticle.NewsSource</p>
+                        <p class="text-muted">@Model.NewsArticleDetails.NewsSource</p>
                     </div>
                 </footer>
             </article>
         </div>
     </div>
 </div>
+
+<script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/pages/newsArticleDetails.js"></script>

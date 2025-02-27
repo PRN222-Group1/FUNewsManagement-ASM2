@@ -7,10 +7,22 @@
 }
 
 <div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+        </div>
+    </div>
+
+    <!-- Show notification -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
     <div class="row justify-content-center">
         <div class="col-md-8">
             <!-- Profile Card -->
-            <div class="card shadow-lg rounded">
+            <div class="card shadow-lg rounded p-3">
 
                 <div class="card-header text-center bg-primary text-white position-relative">
                     <!-- Card Header: Profile Image -->
@@ -38,41 +50,41 @@
                 </div>
 
                 <!-- Card Body: Profile Details -->
-                <div class="card-body">
+                <div class="card-body bg-secondary rounded-3 mb-2">
                     <dl class="row">
                         <!-- Account Name -->
-                        <dt class="col-sm-4 text-end font-weight-bold">Name</dt>
-                        <dd class="col-sm-8">
-                            <span class="form-control-plaintext">@Model.AccountDetails.AccountName</span>
+                        <dt class="col-sm-5 text-end align-content-center font-weight-bold">Name</dt>
+                        <dd class="col-sm-5 mb-0">
+                            <span class="form-control-plaintext text-white py-0">@Model.AccountDetails.AccountName</span>
                         </dd>
 
                         <!-- Account Email -->
-                        <dt class="col-sm-4 text-end font-weight-bold">Email</dt>
-                        <dd class="col-sm-8">
-                            <span class="form-control-plaintext">@Model.AccountDetails.AccountEmail</span>
+                        <dt class="col-sm-5 text-end align-content-center font-weight-bold">Email</dt>
+                        <dd class="col-sm-5 mb-0">
+                            <span class="form-control-plaintext text-white py-0">@Model.AccountDetails.AccountEmail</span>
                         </dd>
 
                         <!-- Account Gender -->
-                        <dt class="col-sm-4 text-end font-weight-bold">Gender</dt>
-                        <dd class="col-sm-8">
-                            <span class="form-control-plaintext">@Model.AccountDetails.Gender</span>
+                        <dt class="col-sm-5 text-end align-content-center font-weight-bold">Gender</dt>
+                        <dd class="col-sm-5 mb-0">
+                            <span class="form-control-plaintext text-white py-0">@Model.AccountDetails.Gender</span>
                         </dd>
 
                         <!-- Account Role -->
-                        <dt class="col-sm-4 text-end font-weight-bold">Role</dt>
-                        <dd class="col-sm-8">
-                            <span class="badge bg-info text-white">@Model.AccountDetails.AccountRole</span>
+                        <dt class="col-sm-5 text-end align-content-center font-weight-bold">Role</dt>
+                        <dd class="col-sm-5 mb-0">
+                            <span class="badge bg-primary text-white">@Model.AccountDetails.AccountRole</span>
                         </dd>
                     </dl>
                 </div>
 
                 <!-- Card Footer: Action Buttons -->
                 <div class="card-footer text-center d-flex justify-content-center gap-2">
-                    <button class="btn btn-outline-primary btn-md d-flex align-items-center mx-2 btn-edit-profile" data-id="@Model.AccountDetails.Id">
-                        <i class="fas fa-edit"></i>
+                    <button class="btn btn-secondary btn-md d-flex align-items-center mx-2 btn-edit-profile" data-id="@Model.AccountDetails.Id">
+                        <i class="fas fa-edit me-2"></i> Edit Profile
                     </button>
 
-                    <a asp-page="/NewsArticles/Index" class="btn btn-secondary">
+                    <a asp-page="/NewsArticles/Index" class="btn btn-outline-secondary">
                         <i class="fa fa-arrow-left"></i> Back to Home
                     </a>
                 </div>
@@ -105,4 +117,6 @@
             });
         })
     </script>
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/pages/profile.js"></script>
 }

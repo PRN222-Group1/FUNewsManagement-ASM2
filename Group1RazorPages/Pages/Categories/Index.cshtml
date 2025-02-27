@@ -16,33 +16,33 @@
     </div>
 
     <!-- Show notification -->
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-    }
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
     }
 
     <!-- Add Category -->
-    <button type="button" class="btn btn-primary" id="btnCreateCategory">
+    <button type="button" class="btn btn-primary mb-3" id="btnCreateCategory">
         <i class="fas fa-plus"></i> Create Category
     </button>
 
-    <form method="get" class="d-flex align-items-center justify-content-between">
-        <!-- Search Input Group -->
-        <partial name="_SearchBar" model="@Model.FilterModel" />
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="get" class="d-flex align-items-center justify-content-between">
+                <!-- Search Input Group -->
+                <partial name="_SearchBar" model="@Model.FilterModel" />
 
-        <!-- Sort Dropdown -->
-        <partial name="_SortDropdown" model="@Model.FilterModel" />
+                <!-- Sort Dropdown -->
+                <partial name="_SortDropdown" model="@Model.FilterModel" />
 
-        <!-- Category Dropdown -->
-        <partial name="_CategoryDropdown" model="@Model.FilterModel" />
+                <!-- Category Dropdown -->
+                <partial name="_CategoryDropdown" model="@Model.FilterModel" />
 
-        <!-- Paginator -->
-        <partial name="_Paginator" model="@Model.FilterModel" />
-    </form>
+                <!-- Paginator -->
+                <partial name="_Paginator" model="@Model.FilterModel" />
+            </form>
+        </div>
+    </div>
 
     <!-- Category List -->
     <table class="table table-bordered mt-3">
@@ -96,7 +96,7 @@
             // Handle automatic modal show
         @if (Model.ShowModal)
         {
-            <text>$('#newsArticleModal').modal('show');</text>
+            <text>$('#categoryModal').modal('show');</text>
         }
 
             // Handle create button click
@@ -117,5 +117,7 @@
             });
         })
     </script>
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/pages/categories.js"></script>
 }
 

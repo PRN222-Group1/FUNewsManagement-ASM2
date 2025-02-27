@@ -1,24 +1,28 @@
 ﻿using BusinessServiceLayer.DTOs;
 using BusinessServiceLayer.Interfaces;
-using DataAccessLayer.Specifications.Categories;
 using DataAccessLayer.Specifications.Tags;
-using Group1RazorPages.Extensions;
 using Group1RazorPages.Helpers;
+using Group1RazorPages.Interfaces;
 using Group1RazorPages.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Group1RazorPages.Pages.Tags
 {
+    [Authorize(Roles = "Staff")]
     public class IndexModel : PageModel
     {
 
         private readonly ITagService _tagService;
+        private readonly ISignalRService _signalRService;
 
-        public IndexModel(ITagService tagService)
+        public IndexModel(ITagService tagService,
+            ISignalRService signalRService)
         {
             _tagService = tagService;
+            _signalRService = signalRService;
         }
 
         public Pagination<TagDTO> Tags { get; set; }
@@ -96,16 +100,18 @@ namespace Group1RazorPages.Pages.Tags
             }
 
             var result = await _tagService.CreateTagAsync(Tag);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Category Created Successfully!";
-            }
-            else
+            await InitializeTagsAndFiltersAsync();
+
+            if (!result)
             {
                 TempData["ErrorMessage"] = "Error creating Category!";
+                return Page();
             }
 
-            await InitializeTagsAndFiltersAsync();
+
+            // Send SignalR Message to clients in order to load tags
+            await _signalRService.LoadTags();
+
             return Page();
         }
 
@@ -129,15 +135,16 @@ namespace Group1RazorPages.Pages.Tags
             }
 
             var result = await _tagService.UpdateTagAsync(TagId.Value, Tag);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Category Updated Successfully!";
-            }
-            else
+            await InitializeTagsAndFiltersAsync();
+
+            if (!result)
             {
                 TempData["ErrorMessage"] = "Error updating Category!";
+                return Page();
             }
-            await InitializeTagsAndFiltersAsync();
+
+            // Send SignalR Message to clients in order to load tags
+            await _signalRService.LoadTags();
 
             return Page();
         }

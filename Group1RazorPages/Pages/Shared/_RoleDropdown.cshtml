@@ -1,7 +1,7 @@
 ﻿@model Group1RazorPages.ViewModels.FilterViewModel
 
 <div class="form-group d-flex align-items-center">
-    <label for="Role">Role: </label>
+    <label for="Role" class="text-white"><i class="fa fa-user me-2"></i>Role: </label>
     <select name="Role" class="form-control" asp-for="@Model.SelectedRoleOption" onchange="this.form.submit();">
         <option value="@null">Select Role</option>
         @foreach (var option in @Model.RolesList)

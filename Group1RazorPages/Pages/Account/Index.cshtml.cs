@@ -3,20 +3,26 @@ using BusinessServiceLayer.DTOs;
 using BusinessServiceLayer.Interfaces;
 using DataAccessLayer.Specifications.Account;
 using Group1RazorPages.Helpers;
+using Group1RazorPages.Interfaces;
 using Group1RazorPages.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Group1RazorPages.Pages.Account
 {
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly IAccountService _accountService;
+        private readonly ISignalRService _signalRService;
 
-        public IndexModel(IAccountService accountService)
+        public IndexModel(IAccountService accountService,
+            ISignalRService signalRService)
         {
             _accountService = accountService;
+            _signalRService = signalRService;
         }
 
         public Pagination<SystemAccountDTO> Accounts { get; set; }
@@ -107,16 +113,17 @@ namespace Group1RazorPages.Pages.Account
             }
 
             var result = await _accountService.CreateAccountAsync(Account);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Account Created Successfully!";
-            }
-            else
+            await InitializeAccountsAndFiltersAsync();
+
+            if (!result)
             {
                 TempData["ErrorMessage"] = "Error creating Account!";
+                return Page();
             }
 
-            await InitializeAccountsAndFiltersAsync();
+            // Send SignalR Message to clients in order to load accounts page
+            await _signalRService.LoadAccounts();
+
             return Page();
         }
 
@@ -150,6 +157,12 @@ namespace Group1RazorPages.Pages.Account
             }
             await InitializeAccountsAndFiltersAsync();
 
+            // Send SignalR Message to clients in order to load accounts page
+            await _signalRService.LoadAccounts();
+
+            // Send SignalR Message to clients in order to load profile page
+            await _signalRService.LoadProfile(AccountId.Value);
+
             return Page();
         }
 
@@ -166,6 +179,9 @@ namespace Group1RazorPages.Pages.Account
                 TempData["ErrorMessage"] = "Account Deleted failed!";
             }
             await InitializeAccountsAndFiltersAsync();
+
+            // Send SignalR Message to clients in order to load accounts page
+            await _signalRService.LoadAccounts();
 
             return Page();
         }

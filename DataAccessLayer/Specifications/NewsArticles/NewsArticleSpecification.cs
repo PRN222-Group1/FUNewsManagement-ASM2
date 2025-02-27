@@ -50,14 +50,23 @@ namespace DataAccessLayer.Specifications.NewsArticles
             AddInclude(na => na.Category);
         }
 
-        public NewsArticleSpecification(DateTime? startDate, DateTime? endDate) : base(x =>
-            !(startDate.HasValue && endDate.HasValue) 
-            || (x.CreatedDate >= startDate && x.CreatedDate <= endDate)
+        public NewsArticleSpecification(int? accountId, DateTime? startDate, DateTime? endDate) : base(x =>
+            (!accountId.HasValue || x.CreatedById == accountId)
+            && (!(startDate.HasValue && endDate.HasValue)
+            || (x.CreatedDate >= startDate && x.CreatedDate <= endDate))
         )
         {
-            AddOrderByDescending(na => na.CreatedDate);
+            AddOrderByDescending(na => na.ModifiedDate);
             AddInclude(na => na.CreatedBy);
             AddInclude(na => na.Category);
+        }
+
+        public NewsArticleSpecification(bool? status, DateTime? startDate, DateTime? endDate) : base(x =>
+            (!status.HasValue || x.NewsStatus == status)
+            && (!(startDate.HasValue && endDate.HasValue)
+            || (x.CreatedDate >= startDate && x.CreatedDate <= endDate))
+        )
+        {
         }
     }
 }

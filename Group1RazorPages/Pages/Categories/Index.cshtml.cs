@@ -1,23 +1,28 @@
-﻿using BusinessObjects.Entities;
-using BusinessServiceLayer.DTOs;
+﻿using BusinessServiceLayer.DTOs;
 using BusinessServiceLayer.Interfaces;
 using DataAccessLayer.Specifications.Categories;
 using Group1RazorPages.Extensions;
 using Group1RazorPages.Helpers;
+using Group1RazorPages.Interfaces;
 using Group1RazorPages.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Group1RazorPages.Pages.Categories
 {
+    [Authorize(Roles = "Staff")]
     public class IndexModel : PageModel
     {
         private readonly ICategoryService _categoryService;
+        private readonly ISignalRService _signalRService;
 
-        public IndexModel(ICategoryService categoryService)
+        public IndexModel(ICategoryService categoryService,
+            ISignalRService signalRService)
         {
             _categoryService = categoryService;
+            _signalRService = signalRService;
         }
 
         public Pagination<CategoryDTO> Categories { get; set; }
@@ -25,6 +30,7 @@ namespace Group1RazorPages.Pages.Categories
         public FilterViewModel FilterModel { get; set; }
 
         [BindProperty(SupportsGet = true)]
+
         public CategorySpecParams SpecParams { get; set; } = new CategorySpecParams();
 
         //========================
@@ -103,16 +109,17 @@ namespace Group1RazorPages.Pages.Categories
             Category.Status = true;
 
             var result = await _categoryService.CreateCategoryAsync(Category);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Category Created Successfully!";
-            }
-            else
+            if (!result)
             {
                 TempData["ErrorMessage"] = "Error creating Category!";
+                return Page();
             }
 
             await InitializeCategoriesAndFiltersAsync();
+
+            // Send SignalR Message to clients in order to load categories page
+            await _signalRService.LoadCategories();
+
             return Page();
         }
 
@@ -136,15 +143,15 @@ namespace Group1RazorPages.Pages.Categories
             }
 
             var result = await _categoryService.EditCategoryAsync(CategoryId.Value, Category);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Category Updated Successfully!";
-            }
-            else
+            if (!result)
             {
                 TempData["ErrorMessage"] = "Error updating Category!";
+                return Page();
             }
             await InitializeCategoriesAndFiltersAsync();
+
+            // Send SignalR Message to clients in order to load categories page
+            await _signalRService.LoadCategories();
 
             return Page();
         }
@@ -153,15 +160,16 @@ namespace Group1RazorPages.Pages.Categories
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             var result = await _categoryService.DeleteCategoryAsync(id);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Category Deleted Successfully!";
-            }
-            else
+            await InitializeCategoriesAndFiltersAsync();
+
+            if (!result)
             {
                 TempData["ErrorMessage"] = "This category still have news articles!";
+                return Page();
             }
-            await InitializeCategoriesAndFiltersAsync();
+
+            // Send SignalR Message to clients in order to load categories page
+            await _signalRService.LoadCategories();
 
             return Page();
         }

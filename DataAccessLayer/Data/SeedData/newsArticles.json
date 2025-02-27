@@ -8,8 +8,8 @@
     "NewsSource": "N/A",
     "CategoryId": 4,
     "NewsStatus": true,
-    "CreatedById": 1,
-    "UpdatedById": 1,
+    "CreatedById": 3,
+    "UpdatedById": 3,
     "ModifiedDate": "2024-05-05T00:00:00.000"
   },
   {
@@ -21,8 +21,8 @@
     "NewsSource": "Internet",
     "CategoryId": 4,
     "NewsStatus": true,
-    "CreatedById": 1,
-    "UpdatedById": 1,
+    "CreatedById": 4,
+    "UpdatedById": 4,
     "ModifiedDate": "2024-05-05T00:00:00.000"
   },
   {
@@ -34,8 +34,8 @@
     "NewsSource": "N/A",
     "CategoryId": 1,
     "NewsStatus": true,
-    "CreatedById": 2,
-    "UpdatedById": 2,
+    "CreatedById": 5,
+    "UpdatedById": 5,
     "ModifiedDate": "2024-05-05T00:00:00.000"
   },
   {
@@ -47,8 +47,8 @@
     "NewsSource": "N/A",
     "CategoryId": 1,
     "NewsStatus": true,
-    "CreatedById": 2,
-    "UpdatedById": 2,
+    "CreatedById": 3,
+    "UpdatedById": 3,
     "ModifiedDate": "2024-05-05T00:00:00.000"
   },
   {
@@ -60,8 +60,8 @@
     "NewsSource": "N/A",
     "CategoryId": 1,
     "NewsStatus": true,
-    "CreatedById": 2,
-    "UpdatedById": 2,
+    "CreatedById": 4,
+    "UpdatedById": 4,
     "ModifiedDate": "2024-05-05T00:00:00.000"
   }
 ]

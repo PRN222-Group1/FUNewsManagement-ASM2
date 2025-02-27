@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Entities;
+using Microsoft.Identity.Client;
 
 namespace DataAccessLayer.Specifications.NewsArticles
 {
@@ -16,9 +17,10 @@ namespace DataAccessLayer.Specifications.NewsArticles
         {
         }
 
-        public NewsArticleCountSpecification(DateTime? startDate, DateTime? endDate) : base(x =>
-            !(startDate.HasValue && endDate.HasValue)
-            || (x.CreatedDate >= startDate && x.CreatedDate <= endDate)
+        public NewsArticleCountSpecification(int? accountId, DateTime? startDate, DateTime? endDate) : base(x =>
+            (!accountId.HasValue || x.CreatedById == accountId)
+            && (!(startDate.HasValue && endDate.HasValue)
+            || (x.CreatedDate >= startDate && x.CreatedDate <= endDate))
         )
         {
         }

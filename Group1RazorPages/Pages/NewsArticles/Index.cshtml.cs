@@ -4,6 +4,7 @@ using BusinessServiceLayer.Interfaces;
 using DataAccessLayer.Specifications.NewsArticles;
 using Group1RazorPages.Extensions;
 using Group1RazorPages.Helpers;
+using Group1RazorPages.Interfaces;
 using Group1RazorPages.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,10 +16,13 @@ namespace Group1RazorPages.Pages.NewsArticles
     public class IndexModel : PageModel
     {
         private readonly INewsArticleService _newsArticleService;
+        private readonly ISignalRService _signalRService;
 
-        public IndexModel(INewsArticleService newsArticleService)
+        public IndexModel(INewsArticleService newsArticleService, 
+            ISignalRService signalRService)
         {
             _newsArticleService = newsArticleService;
+            _signalRService = signalRService;
         }
 
         public Pagination<NewsArticleDTO> NewsArticles { get; set; }
@@ -115,16 +119,23 @@ namespace Group1RazorPages.Pages.NewsArticles
             NewsArticle.NewsStatus = false;
 
             var result = await _newsArticleService.CreateNewsArticleAsync(NewsArticle);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "News Article Created Successfully!";
-            }
-            else
+            await InitializeNewsArticlesAndFiltersAsync();
+
+            if (!result)
             {
                 TempData["ErrorMessage"] = "Error creating News Article!";
+                return Page();
             }
 
-            await InitializeNewsArticlesAndFiltersAsync();
+            // Send SignalR Message to clients in order to load news articles
+            await _signalRService.LoadNewsArticles();
+
+            // Send SignalR Message to clients in order to load reports
+            await _signalRService.LoadReports();
+
+            // Send SignalR Message to clients in order to load history
+            await _signalRService.LoadHistory(currentUserId.Value);
+
             return Page();
         }
 
@@ -153,15 +164,25 @@ namespace Group1RazorPages.Pages.NewsArticles
             NewsArticle.UpdatedById = currentUserId;
 
             var result = await _newsArticleService.UpdateNewsArticleAsync(ArticleId.Value, NewsArticle);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "News Article Updated Successfully!";
-            }
-            else
+            await InitializeNewsArticlesAndFiltersAsync();
+
+            if (!result)
             {
                 TempData["ErrorMessage"] = "Error updating News Article!";
+                return Page();
             }
-            await InitializeNewsArticlesAndFiltersAsync();
+
+            // Send SignalR Message to clients in order to load news articles
+            await _signalRService.LoadNewsArticles();
+
+            // Send SignalR Message to clients in order to load history
+            await _signalRService.LoadHistory(currentUserId.Value);
+
+            // Send SignalR Message to clients in order to load reports
+            await _signalRService.LoadReports();
+
+            // Send SignalR Message to clients in order to load news article details page
+            await _signalRService.LoadNewsArticleDetails(ArticleId.Value);
 
             return Page();
         }
@@ -170,15 +191,24 @@ namespace Group1RazorPages.Pages.NewsArticles
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             var result = await _newsArticleService.DeleteNewsArticleAsync(id);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "News Article Deleted Successfully!";
-            }
-            else
+            await InitializeNewsArticlesAndFiltersAsync();
+
+            if (!result)
             {
                 TempData["ErrorMessage"] = "Error deleting News Article!";
+                return Page();
             }
-            await InitializeNewsArticlesAndFiltersAsync();
+
+            var currentUserId = User.GetCurrentUserId().Value;
+
+            // Send SignalR Message to clients in order to load news articles page
+            await _signalRService.LoadNewsArticles();
+
+            // Send SignalR Message to clients in order to load reports
+            await _signalRService.LoadReports();
+
+            // Send SignalR Message to clients in order to load history
+            await _signalRService.LoadHistory(currentUserId);
 
             return Page();
         }

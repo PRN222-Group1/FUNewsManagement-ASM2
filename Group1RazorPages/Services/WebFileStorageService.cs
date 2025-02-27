@@ -19,20 +19,6 @@ namespace Group1RazorPages.Services
 
             string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, uploadPath, directory);
 
-            // Clean the directory first (delete all existing files)
-            if (Directory.Exists(uploadsFolder))
-            {
-                foreach (var file in Directory.GetFiles(uploadsFolder))
-                {
-                    File.Delete(file);
-                }
-            }
-            else
-            {
-                // Make sure the directory exists
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
             // Save the new file
             string filePath = Path.Combine(uploadsFolder, fileName);
             using (var stream = new FileStream(filePath, FileMode.Create))

@@ -14,30 +14,30 @@
     </div>
 
     <!-- Show notification -->
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-    }
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
     }
 
     <!-- Add Tag -->
-    <button type="button" class="btn btn-primary" id="btnCreateTag">
+    <button type="button" class="btn btn-primary mb-3" id="btnCreateTag">
         <i class="fas fa-plus"></i> Create Tag
     </button>
 
-    <form asp-action="Index" method="get" class="d-flex align-items-center justify-content-between">
-        <!-- Search Input Group -->
-        <partial name="_SearchBar" model="@Model.FilterModel" />
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="d-flex align-items-center justify-content-between">
+                <!-- Search Input Group -->
+                <partial name="_SearchBar" model="@Model.FilterModel" />
 
-        <!-- Sort Dropdown -->
-        <partial name="_SortDropdown" model="@Model.FilterModel" />
+                <!-- Sort Dropdown -->
+                <partial name="_SortDropdown" model="@Model.FilterModel" />
 
-        <!-- Paginator -->
-        <partial name="_Paginator" model="@Model.FilterModel" />
-    </form>
+                <!-- Paginator -->
+                <partial name="_Paginator" model="@Model.FilterModel" />
+            </form>
+        </div>
+    </div>
 
     <!-- Category List -->
     <table class="table table-bordered mt-3">
@@ -101,4 +101,6 @@
             });
         })
     </script>
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/pages/tags.js"></script>
 }

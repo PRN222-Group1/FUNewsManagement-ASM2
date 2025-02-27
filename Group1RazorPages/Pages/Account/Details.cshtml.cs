@@ -1,22 +1,28 @@
 ﻿using BusinessObjects.Enums;
 using BusinessServiceLayer.DTOs;
 using BusinessServiceLayer.Interfaces;
+using Group1RazorPages.Interfaces;
 using Group1RazorPages.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Group1RazorPages.Pages.Account
 {
+    [Authorize(Roles = "Staff,Lecturer")]
     public class DetailsModel : PageModel
     {
         private readonly IAccountService _accountService;
         private readonly IUploadService _uploadService;
+        private readonly ISignalRService _signalRService;
 
-        public DetailsModel(IAccountService accountService, IUploadService uploadService)
+        public DetailsModel(IAccountService accountService, 
+            IUploadService uploadService, ISignalRService signalRService)
         {
             _accountService = accountService;
             _uploadService = uploadService;
+            _signalRService = signalRService;
         }
 
         public SystemAccountDTO AccountDetails { get; set; }
@@ -83,15 +89,19 @@ namespace Group1RazorPages.Pages.Account
             }
 
             var result = await _accountService.UpdateAccountAsync(AccountId.Value, Account);
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Profile Updated Successfully!";
-            }
-            else
+            await InitializeAccountAsync(AccountId.Value);
+
+            if (!result)
             {
                 TempData["ErrorMessage"] = "Error updating Profile!";
+                return Page();
             }
-            await InitializeAccountAsync(AccountId.Value);
+
+            // Send SignalR Message to clients in order to load accounts page
+            await _signalRService.LoadAccounts();
+
+            // Send SignalR Message to clients in order to load profile page
+            await _signalRService.LoadProfile(AccountId.Value);
 
             return Page();
         }
@@ -115,18 +125,18 @@ namespace Group1RazorPages.Pages.Account
 
             // Update account with the new image URL
             var result = await _accountService.UpdateAccountImageAsync(id, uploadResult.RelativeUrl);
+            await InitializeAccountAsync(id);
 
-            if (result)
-            {
-                TempData["SuccessMessage"] = "Profile image updated successfully!";
-            }
-            else
+            if (!result)
             {
                 await _uploadService.DeleteFileAsync(uploadResult.RelativeUrl);
                 TempData["ErrorMessage"] = "Error updating profile image.";
+                return Page();
             }
 
-            await InitializeAccountAsync(id);
+            // Send SignalR Message to clients in order to load profile page
+            await _signalRService.LoadProfile(id);
+
             return Page();
         }
 

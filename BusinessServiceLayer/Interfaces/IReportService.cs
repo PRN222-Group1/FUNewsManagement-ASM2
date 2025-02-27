@@ -1,10 +1,10 @@
-﻿using BusinessServiceLayer.DTOs;
-
-namespace BusinessServiceLayer.Interfaces
+﻿namespace BusinessServiceLayer.Interfaces
 {
     public interface IReportService
     {
-        Task<IReadOnlyList<NewsArticleDTO>> GetNewsArticlesByDateRangeAsync(DateTime? startDate, DateTime? endDate);
-        Task<int> GetCountNewsArticlesByDateRangeAsync(DateTime? startDate, DateTime? endDate);
+        Task<Dictionary<string, int>> GetArticlesCountByAuthorAsync(DateTime? startDate, DateTime? endDate);
+        Task<int> CountPublishedNewsArticlesAsync(DateTime? startDate, DateTime? endDate);
+        Task<int> CountDraftNewsArticlesAsync(DateTime? startDate, DateTime? endDate);
+        Task<int> CountTotalNewsArticlesAsync(DateTime? startDate, DateTime? endDate);
     }
 }

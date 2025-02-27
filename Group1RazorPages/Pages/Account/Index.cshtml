@@ -16,33 +16,33 @@
     </div>
 
     <!-- Show notification -->
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-    }
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
     }
 
     <!-- Add Category -->
-    <button type="button" class="btn btn-primary" id="btnCreateAccount">
+    <button type="button" class="btn btn-primary mb-3" id="btnCreateAccount">
         <i class="fas fa-plus"></i> Create Category
     </button>
 
-    <form asp-action="Index" method="get" class="d-flex align-items-center justify-content-between">
-        <!-- Search Input Group -->
-        <partial name="_SearchBar" model="@Model.FilterModel" />
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="d-flex align-items-center justify-content-between">
+                <!-- Search Input Group -->
+                <partial name="_SearchBar" model="@Model.FilterModel" />
 
-        <!-- Sort Dropdown -->
-        <partial name="_SortDropdown" model="@Model.FilterModel" />
+                <!-- Sort Dropdown -->
+                <partial name="_SortDropdown" model="@Model.FilterModel" />
 
-        <!-- Role Dropdown -->
-        <partial name="_RoleDropdown" model="@Model.FilterModel" />
+                <!-- Role Dropdown -->
+                <partial name="_RoleDropdown" model="@Model.FilterModel" />
 
-        <!-- Paginator -->
-        <partial name="_Paginator" model="@Model.FilterModel" />
-    </form>
+                <!-- Paginator -->
+                <partial name="_Paginator" model="@Model.FilterModel" />
+            </form>
+        </div>
+    </div>
 
     <!-- Category List -->
     <table class="table table-bordered mt-3">
@@ -117,6 +117,8 @@
             });
         })
     </script>
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/pages/accounts.js"></script>
 }
 
 

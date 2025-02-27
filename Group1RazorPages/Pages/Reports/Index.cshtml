@@ -1,93 +1,284 @@
-﻿@using BusinessServiceLayer.DTOs
+﻿@page
+@using BusinessServiceLayer.DTOs
 @using Group1RazorPages.ViewModels
-@model IReadOnlyList<NewsArticleDTO>
+@model Group1RazorPages.Pages.Reports.IndexModel
 @{
-    ViewData["Title"] = "Report Statistics";
-
-    // Initialize search and sort properties
-    var filterModel = new FilterViewModel() {
-        StartDate = (DateTime?) ViewData["StartDate"],
-        EndDate = (DateTime?)ViewData["EndDate"]
-    };
-
-    // Retrieve the count from ViewData
-    var newsArticleCount = ViewData["Count"] ?? 0;
+    ViewData["Title"] = "Article Report Statistics";
 }
 
 <div class="container mt-5">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="text-center mb-4">@ViewData["Title"]</h1>
+            <h1 class="text-center mb-4">
+                <i class="bi bi-bar-chart-fill text-primary me-2"></i>@ViewData["Title"]
+            </h1>
         </div>
     </div>
 
     <!-- Show notification -->
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+        <div class="alert alert-danger">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            @TempData["ErrorMessage"]
+        </div>
     }
 
-    <!-- Display the number of news articles -->
-    <div class="row">
-        <div class="alert alert-info col-md-12">
-            @if (filterModel.StartDate == null || filterModel.EndDate == null)
-            {
-                <strong>Total News Articles created:</strong> <strong>@newsArticleCount</strong>
-            }
-            else
-            {
-                <span>
-                    <strong>Number of News Articles Created Between </strong>
-                    <strong>@(filterModel.StartDate?.ToString("MM/dd/yyyy"))</strong>
-                    <strong> and </strong>
-                    <strong>@(filterModel.EndDate?.ToString("MM/dd/yyyy")):</strong>
-                    <strong>@newsArticleCount</strong>
-                </span>
-            }
+    <!-- Date range filter form -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fa fa-calendar me-2"></i> Start Date
+                        </span>
+                        <input asp-for="@Model.FilterModel.StartDate" class="form-control" name="StartDate" type="date" />
+                    </div>
+                    <span asp-validation-for="@Model.FilterModel.StartDate" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text bg-primary text-white">
+                            <i class="fa fa-calendar me-2"></i> End Date
+                        </span>
+                        <input asp-for="@Model.FilterModel.EndDate" class="form-control" name="EndDate" type="date" />
+                    </div>
+                    <span asp-validation-for="@Model.FilterModel.EndDate" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-secondary">
+                        <i class="fa fa-search me-2"></i> Apply Filter
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                        <i class="fa fa-history me-1"></i> Reset
+                    </a>
+                </div>
+            </form>
         </div>
     </div>
 
-    <form asp-action="Index" method="get" class="d-flex align-items-center justify-content-start gap-3">
-        <div class="form-group d-flex align-items-center gap-2">
-            <label asp-for="@filterModel.StartDate">Start Date</label>
-            <input asp-for="@filterModel.StartDate" class="form-control" name="StartDate" type="date" />
-            <span asp-validation-for="@filterModel.StartDate" class="text-danger"></span>
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-success h-100 shadow">
+                <div class="card-body d-flex flex-column align-items-center">
+                    <h5 class="card-title">
+                        <i class="fa fa-newspaper me-2"></i>Published Articles
+                    </h5>
+                    <p class="card-text display-4">@Model.ReportViewModel?.PublishedArticles</p>
+                </div>
+            </div>
         </div>
-        <div class="form-group d-flex align-items-center gap-2">
-            <label asp-for="@filterModel.EndDate">End Date</label>
-            <input asp-for="@filterModel.EndDate" class="form-control" name="EndDate" type="date" />
-            <span asp-validation-for="@filterModel.EndDate" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-outline-primary">Search</button>
-        <a href="@Url.Action("Index")" class="btn btn-danger">Reset</a>
-    </form>
 
-    <!-- Category List -->
-    <table class="table table-bordered mt-3">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>News Title</th>
-                <th>Category Name</th>
-                <th>Author Name</th>
-                <th>Created Date</th>
-                <th>Modified Date</th>
-                <th>News Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var newsArticle in Model)
-            {
-                <tr>
-                    <td>@newsArticle.Id</td>
-                    <td>@newsArticle.NewsTitle</td>
-                    <td>@newsArticle.CategoryName</td>
-                    <td>@newsArticle.AuthorName</td>
-                    <td>@newsArticle.CreatedDate</td>
-                    <td>@newsArticle.ModifiedDate</td>
-                    <td>@(newsArticle.NewsStatus ? "Published" : "Inactive")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        <div class="col-md-4">
+            <div class="card text-white bg-secondary h-100 shadow">
+                <div class="card-body d-flex flex-column align-items-center">
+                    <h5 class="card-title">
+                        <i class="fa fa-file me-2"></i>Draft Articles
+                    </h5>
+                    <p class="card-text display-4">@Model.ReportViewModel?.DraftArticles</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-white bg-primary h-100 shadow">
+                <div class="card-body d-flex flex-column align-items-center">
+                    <h5 class="card-title">
+                        <i class="fa fa-calculator me-2"></i>Total Articles
+                    </h5>
+                    <p class="card-text display-4">@Model.ReportViewModel?.TotalArticles</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Author Statistics Charts -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-secondary">
+                    <h5 class="text-white mb-0">
+                        <i class="bi bi-bar-chart me-2"></i>Articles by Author
+                    </h5>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <canvas id="authorBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-secondary">
+                    <h5 class="text-white mb-0">
+                        <i class="bi bi-pie-chart me-2"></i>Author Contribution
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="authorPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Author Details Table -->
+    @if (Model.ReportViewModel?.ArticlesCreatedByAuthor?.Any() == true)
+    {
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-secondary">
+                <h5 class="text-white mb-0">
+                    <i class="bi bi-table me-2"></i>Detailed Author Statistics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table text-white">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Author</th>
+                                <th>Articles Count</th>
+                                <th>Contribution Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var author in Model.ReportViewModel.ArticlesCreatedByAuthor)
+                            {
+                                var percentage = Model.ReportViewModel.TotalArticles > 0
+                                ? Math.Round((double)author.Value / Model.ReportViewModel.TotalArticles * 100, 1)
+                                : 0;
+
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-person me-2"></i>@author.Key
+                                    </td>
+                                    <td>@author.Value</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-info" role="progressbar"
+                                                 style="width: @percentage%;"
+                                                 aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">
+                                                @percentage%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Process author data from model
+            const authorData = @Html.Raw(Json.Serialize(Model.ReportViewModel?.ArticlesCreatedByAuthor ?? new Dictionary<string, int>()));
+            const authors = Object.keys(authorData);
+            const counts = Object.values(authorData);
+            const backgroundColors = [
+                '#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236',
+                '#166a8f', '#00a950', '#58595b', '#8549ba', '#a2b9bc'
+            ];
+            // Generate colors based on the number of authors
+            const chartColors = authors.map((_, index) =>
+                backgroundColors[index % backgroundColors.length]);
+
+            // Bar Chart
+            const barCtx = document.getElementById('authorBarChart').getContext('2d');
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: authors,
+                    datasets: [{
+                        label: 'Number of Articles',
+                        data: counts,
+                        backgroundColor: chartColors,
+                        borderColor: chartColors.map(color => color.replace('0.7', '1')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                            labels: {
+                                color: '#FFFFFF'  // White text for legend (if displayed)
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Articles: ${context.raw}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                color: '#FFFFFF'  // White text for y-axis ticks
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'  // Lighter grid lines
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#FFFFFF'  // White text for x-axis ticks
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'  // Lighter grid lines
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Pie Chart
+            const pieCtx = document.getElementById('authorPieChart').getContext('2d');
+            new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: authors,
+                    datasets: [{
+                        data: counts,
+                        backgroundColor: chartColors,
+                        borderColor: '#ffffff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#FFFFFF'  // White text for legend labels
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((context.raw / total) * 100);
+                                    return `${context.label}: ${context.raw} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    <script src="~/js/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/pages/reports.js"></script>
+}
